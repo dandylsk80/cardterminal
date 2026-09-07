@@ -296,7 +296,7 @@ function htmlResp(b){ return new Response(b,{headers:{"cache-control":"public, m
 const HTML_CACHE_SEC = 21600;
 /* 캐시 키에 버전을 붙인다. 본문을 고친 뒤 이 값을 올리면 이전 엣지 캐시가
    즉시 무시된다 (캐시 비우기 API 권한이 없어도 배포만으로 무효화된다). */
-const HTML_CACHE_VER = "7";
+const HTML_CACHE_VER = "8";
 function edgeCache(){ return (typeof caches !== "undefined" && caches.default) ? caches.default : null; }
 function htmlCacheKey(request){
   try { const u = new URL(request.url); u.searchParams.set("_cv", HTML_CACHE_VER); return new Request(u.toString(), { method: "GET" }); }
@@ -401,7 +401,7 @@ var CONTENT_POOL = [
     "blocks": [
      {
       "t": "p",
-      "b": "카드단말기는 한 번 놓으면 몇 년은 쓰는 물건이라 처음에 잘 고르셔야 돼요. 나중에 바꾸려면 카드사 등록도 다시 해야 하고 번거롭거든요. {dong} 매장도 손님이 어디서 계산하느냐에 따라 카운터에 두는 게 편한 곳이 있고, 들고 다니는 게 편한 곳이 있어요. 사장님들 상담할 때 늘 물어보시는 순서대로 — 기기 고르기, 서류, 비용, 정산, 고장 났을 때 — 쭉 적어봤습니다. 다른 데서 들으신 얘기랑 비교하면서 보셔도 되고요."
+      "b": "카드단말기는 한 번 놓으면 몇 년은 쓰는 물건이라 처음에 잘 고르셔야 돼요. 나중에 바꾸려면 카드사 등록도 다시 해야 하고 번거롭거든요. 요즘 많이 찾으시는 토스단말기도 같이 취급하니까 그것까지 놓고 골라드릴게요. {dong} 매장도 손님이 어디서 계산하느냐에 따라 카운터에 두는 게 편한 곳이 있고, 들고 다니는 게 편한 곳이 있어요. 사장님들 상담할 때 늘 물어보시는 순서대로 — 기기 고르기, 서류, 비용, 정산, 고장 났을 때 — 쭉 적어봤습니다. 다른 데서 들으신 얘기랑 비교하면서 보셔도 되고요."
      },
      {
       "t": "tri",
@@ -451,7 +451,7 @@ var CONTENT_POOL = [
     "blocks": [
      {
       "t": "p",
-      "b": "{dong}에서 카드단말기 알아보고 계시면 딱 두 가지만 정하시면 돼요. 계산을 카운터에서 받는지, 자리나 밖에서 받는지. 이것만 정해지면 유선인지 무선인지 나오고, 나머지 카드사 등록이나 초기 설정은 저희가 다 합니다. 기종 비교하고 통신사 고르고 그런 거 사장님이 하실 필요 없어요. 아래에 그 두 가지 어떻게 정하는지, 정하고 나면 뭐가 필요한지 순서대로 적어뒀습니다. 보시다가 막히면 아래 전화 버튼 눌러서 물어보셔도 되고요."
+      "b": "{dong}에서 카드단말기 알아보고 계시면 딱 두 가지만 정하시면 돼요. 계산을 카운터에서 받는지, 자리나 밖에서 받는지. 이것만 정해지면 유선인지 무선인지 나오고, 나머지 카드사 등록이나 초기 설정은 저희가 다 합니다. 기종 비교하고 통신사 고르고 그런 거 사장님이 하실 필요 없어요. 토스단말기 포함해서 가게에 맞는 걸로 잡아드립니다. 아래에 그 두 가지 어떻게 정하는지, 정하고 나면 뭐가 필요한지 순서대로 적어뒀습니다. 보시다가 막히면 아래 전화 버튼 눌러서 물어보셔도 되고요."
      },
      {
       "t": "tri",
@@ -527,7 +527,7 @@ var CONTENT_POOL = [
     "blocks": [
      {
       "t": "p",
-      "b": "유선이랑 무선은 성능이 다른 게 아니라 쓰는 자리가 달라요. 둘 다 IC칩, 마그네틱, 삼성페이, 애플페이, 현금영수증 다 되고 영수증도 나옵니다. 승인 속도도 체감으로는 차이 없어요. 차이는 선이 있냐 없냐, 그것뿐이에요."
+      "b": "유선이랑 무선은 성능이 다른 게 아니라 쓰는 자리가 달라요. 둘 다 IC칩, 마그네틱, 삼성페이, 애플페이, 현금영수증 다 되고 영수증도 나옵니다. 승인 속도도 체감으로는 차이 없어요. 토스단말기도 마찬가지로 유선형·무선형이 따로 있고요. 차이는 선이 있냐 없냐, 그것뿐이에요."
      },
      {
       "t": "compare",
@@ -649,7 +649,7 @@ var CONTENT_POOL = [
      },
      {
       "t": "p",
-      "b": "기존 계약서 사진으로 보내주시면 위약금 있는지, 해지하려면 어디로 연락해야 하는지, 기기는 반납해야 하는지 같이 봐드려요. 위약금이 남아 있으면 남은 기간이랑 비교해서 지금 바꾸는 게 나은지 기다리는 게 나은지도 말씀드리고요."
+      "b": "토스단말기로 바꾸려는 분도 순서는 똑같아요. 기존 계약서 사진으로 보내주시면 위약금 있는지, 해지하려면 어디로 연락해야 하는지, 기기는 반납해야 하는지 같이 봐드려요. 위약금이 남아 있으면 남은 기간이랑 비교해서 지금 바꾸는 게 나은지 기다리는 게 나은지도 말씀드리고요."
      }
     ]
    },
@@ -699,7 +699,7 @@ var CONTENT_POOL = [
     "blocks": [
      {
       "t": "p",
-      "b": "단말기를 바꾸면 카드사 가맹 등록도 새로 해요. 기존 등록이 자동으로 넘어오는 게 아니라서요. 그래서 새 단말기 신청하실 때 서류를 다시 내시는 거고, 저희가 카드사에 새로 접수합니다. 이 등록이 끝나야 새 단말기로 결제가 되니까, 등록 끝나는 걸 확인하고 기존 걸 해지하시면 돼요."
+      "b": "단말기를 바꾸면 — 일반 단말기든 토스단말기든 — 카드사 가맹 등록도 새로 해요. 기존 등록이 자동으로 넘어오는 게 아니라서요. 그래서 새 단말기 신청하실 때 서류를 다시 내시는 거고, 저희가 카드사에 새로 접수합니다. 이 등록이 끝나야 새 단말기로 결제가 되니까, 등록 끝나는 걸 확인하고 기존 걸 해지하시면 돼요."
      },
      {
       "t": "flow",
@@ -823,7 +823,7 @@ var CONTENT_POOL = [
      },
      {
       "t": "p",
-      "b": "간편결제는 손님이 폰 갖다 대면 끝이에요. 사장님이 앱 깔거나 QR 띄우거나 그런 거 없어요. 손님들이 뭘 주로 쓰든 단말기 한 대로 다 받히고, 결제 내역은 한 화면에서 보시면 됩니다. 현금 손님도 같은 기기에서 현금영수증 끊어드리면 되고요. 손님 전화번호 입력하거나 현금영수증 카드 대면 바로 발행돼요. 매출 내역이 카드든 간편결제든 현금영수증이든 한군데 모이니까 나중에 정리하기도 편해요."
+      "b": "간편결제는 손님이 폰 갖다 대면 끝이에요. 토스단말기면 토스페이 손님한텐 더 편하고요. 사장님이 앱 깔거나 QR 띄우거나 그런 거 없어요. 손님들이 뭘 주로 쓰든 단말기 한 대로 다 받히고, 결제 내역은 한 화면에서 보시면 됩니다. 현금 손님도 같은 기기에서 현금영수증 끊어드리면 되고요. 손님 전화번호 입력하거나 현금영수증 카드 대면 바로 발행돼요. 매출 내역이 카드든 간편결제든 현금영수증이든 한군데 모이니까 나중에 정리하기도 편해요."
      },
      {
       "t": "p",
@@ -1179,7 +1179,7 @@ var CONTENT_POOL = [
      },
      {
       "t": "p",
-      "b": "다른 데랑 비교하실 때 이 세 개 먼저 물어보세요. 어떤 데는 관리비 대신 다른 이름으로 매달 받기도 하니까 '월'이라고 붙은 건 다 물어보시고요. 단말기 조건은 업종마다 달라서 상담할 때 정확한 숫자로 말씀드릴게요. 문자로 조건 정리해서 보내드리니까 나중에 다시 보셔도 되고요."
+      "b": "다른 데랑 비교하실 때 이 세 개 먼저 물어보세요. 토스단말기 조건도 같이 보실 수 있어요. 어떤 데는 관리비 대신 다른 이름으로 매달 받기도 하니까 '월'이라고 붙은 건 다 물어보시고요. 단말기 조건은 업종마다 달라서 상담할 때 정확한 숫자로 말씀드릴게요. 문자로 조건 정리해서 보내드리니까 나중에 다시 보셔도 되고요."
      }
     ]
    },
@@ -1599,8 +1599,8 @@ var CONTENT_POOL = [
      },
      {
       "t": "faq",
-      "q": "지금 쓰는 단말기 해지는 어떻게 해요?",
-      "a": "기존 계약 조건 알려주시면 위약금 있는지랑 해지 순서 같이 정리해 드릴게요. 해지 전에 새 거 먼저 등록해서 결제 못 받는 날 없게 하는 게 좋아요."
+      "q": "지금 쓰는 단말기 해지하고 토스단말기로 바꿀 수 있어요?",
+      "a": "네. 기존 계약 조건 알려주시면 위약금 있는지랑 해지 순서 같이 정리해 드릴게요. 해지 전에 새 거 먼저 등록해서 결제 못 받는 날 없게 하는 게 좋아요."
      },
      {
       "t": "faq",
@@ -1646,8 +1646,8 @@ var CONTENT_POOL = [
      },
      {
       "t": "faq",
-      "q": "애플페이 돼요?",
-      "a": "네, 됩니다. 삼성페이, 카카오페이, 네이버페이도 기본으로 돼요."
+      "q": "토스단말기도 돼요?",
+      "a": "네, 취급해요. 유선·무선 둘 다 있고, 일반 단말기랑 조건 비교해서 맞는 쪽으로 안내드려요. 애플페이·삼성페이·카카오페이·네이버페이도 다 되고요."
      },
      {
       "t": "faq",
@@ -1966,11 +1966,11 @@ function renderDong(r){
   const ogimg=photoUrl(r.url);
   const v=poolVars(r.sido,r.gu,r.dong);
   const body=fixJosa(poolBody(r.url,v,r.dong)+nearbyDong(r,v),[r.sido,r.gu,r.dong]);
-  return shell({title:`${r.name} 카드단말기 설치 — ${SITE_NAME}`,
-    desc:`${r.name} 카드단말기 설치 안내. ${r.dong} 매장에 맞는 유선·무선 단말기 고르는 기준, 준비 서류, 가맹 등록, 정산까지 순서대로 정리했습니다.`,
+  return shell({title:`${r.name} 카드단말기·토스단말기 설치 — ${SITE_NAME}`,
+    desc:`${r.name} 카드단말기·토스단말기 설치 안내. ${r.dong} 매장에 맞는 유선·무선 단말기 고르는 기준, 준비 서류, 가맹 등록, 정산까지 순서대로 정리했습니다.`,
     canonical,ogimg,
     crumb:`<a href="/">홈</a><span>›</span><a href="/region">지역별 설치</a><span>›</span><a href="/region/${r.ss}">${esc(r.sido)}</a><span>›</span><a href="/region/${r.ss}/${r.gg}">${esc(r.gu)}</a><span>›</span>${esc(r.dong)}`,
-    h1:`${esc(r.dong)} 카드단말기 설치 안내`, metaArea:`${r.sido} ${r.gu}`,
+    h1:`${esc(r.dong)} 카드단말기·토스단말기 설치 안내`, metaArea:`${r.sido} ${r.gu}`,
     bodyMain:body, seedStr:r.url, areaServed:r.name, faq:poolFaq(r.url,v,[r.sido,r.gu,r.dong]),
     trail:[{n:"홈",u:"/"},{n:"지역별 설치",u:"/region"},{n:r.sido,u:`/region/${r.ss}`},{n:r.gu,u:`/region/${r.ss}/${r.gg}`},{n:r.dong,u:`/region/${r.url}`}]});
 }
@@ -2000,11 +2000,11 @@ function renderGugun(ss, gg){
   const body=fixJosa(poolBody(slug,v,gu),[sido,gu])
     +`<div class="child"><h2>${esc(gu)} 읍·면·동 선택</h2><div class="child-list">${links}</div></div>`
     +nearbyGuBlock(ss,gg,sido);
-  return shell({title:`${sido} ${gu} 카드단말기 설치 — ${SITE_NAME}`,
-    desc:`${sido} ${gu} 카드단말기 설치 안내. ${gu} 내 읍·면·동별 안내와 단말기 고르는 기준, 준비 서류, 가맹 등록 절차를 정리했습니다.`,
+  return shell({title:`${sido} ${gu} 카드단말기·토스단말기 설치 — ${SITE_NAME}`,
+    desc:`${sido} ${gu} 카드단말기·토스단말기 설치 안내. ${gu} 내 읍·면·동별 안내와 단말기 고르는 기준, 준비 서류, 가맹 등록 절차를 정리했습니다.`,
     canonical,ogimg,
     crumb:`<a href="/">홈</a><span>›</span><a href="/region">지역별 설치</a><span>›</span><a href="/region/${ss}">${esc(sido)}</a><span>›</span>${esc(gu)}`,
-    h1:`${esc(gu)} 카드단말기 설치 안내`, metaArea:sido,
+    h1:`${esc(gu)} 카드단말기·토스단말기 설치 안내`, metaArea:sido,
     leadText:`${gu} 매장에 맞는 카드단말기를 안내해 드립니다. 아래에서 읍·면·동을 선택하세요.`,
     bodyMain:body, seedStr:slug, areaServed:`${sido} ${gu}`, faq:poolFaq(slug,v,[sido,gu]),
     trail:[{n:"홈",u:"/"},{n:"지역별 설치",u:"/region"},{n:sido,u:`/region/${ss}`},{n:gu,u:`/region/${ss}/${gg}`}]});
@@ -2020,11 +2020,11 @@ function renderSido(ss){
   const links=guns.map(g=>`<a href="/region/${ss}/${g.gg}">${esc(g.gu)}</a>`).join("");
   const body=fixJosa(poolBody(ss,v,sido),[sido])
     +`<div class="child"><h2>${esc(sido)} 시·군·구 선택</h2><div class="child-list">${links}</div></div>`;
-  return shell({title:`${sido} 카드단말기 설치 — ${SITE_NAME}`,
-    desc:`${sido} 카드단말기 설치 안내. ${sido} 시·군·구별 안내와 단말기 고르는 기준, 준비 서류, 가맹 등록 절차를 정리했습니다.`,
+  return shell({title:`${sido} 카드단말기·토스단말기 설치 — ${SITE_NAME}`,
+    desc:`${sido} 카드단말기·토스단말기 설치 안내. ${sido} 시·군·구별 안내와 단말기 고르는 기준, 준비 서류, 가맹 등록 절차를 정리했습니다.`,
     canonical,ogimg,
     crumb:`<a href="/">홈</a><span>›</span><a href="/region">지역별 설치</a><span>›</span>${esc(sido)}`,
-    h1:`${esc(sido)} 카드단말기 설치 안내`, metaArea:"전국",
+    h1:`${esc(sido)} 카드단말기·토스단말기 설치 안내`, metaArea:"전국",
     leadText:`${sido} 매장에 맞는 카드단말기를 안내해 드립니다. 아래에서 시·군·구를 선택하세요.`,
     bodyMain:body, seedStr:ss, areaServed:sido, faq:poolFaq(ss,v,[sido]),
     trail:[{n:"홈",u:"/"},{n:"지역별 설치",u:"/region"},{n:sido,u:`/region/${ss}`}]});
@@ -2083,8 +2083,8 @@ function renderRegionIndex(){
 }
 // ---- 홈 ----
 function renderHome(){
-  const title=`PRIMEpos ${SITE_NAME} — 유선·무선 카드단말기 설치 상담`;
-  const desc="기종 비교, 통신사 선택, 카드사 등록 — 사장님이 하실 건 없어요. 손님이 계산하는 자리만 골라주시면 유선인지 무선인지 바로 정해집니다.";
+  const title=`PRIMEpos ${SITE_NAME} — 유선·무선 카드단말기·토스단말기 설치 상담`;
+  const desc="기종 비교, 통신사 선택, 카드사 등록 — 사장님이 하실 건 없어요. 손님이 계산하는 자리만 골라주시면 유선인지 무선인지 바로 정해집니다. 토스단말기도 유선·무선 둘 다 취급합니다.";
   const ogimg=photoUrl("home");
   /* 지역 버튼 18개 — 디자인 원본 순서 그대로, 마지막 "전체"는 /region */
   const sidoBtns=HOME_SIDO.map(ss=>`<a href="/region/${ss}">${SIDO_SHORT[ss]}</a>`).join("")
@@ -2097,9 +2097,9 @@ function renderHome(){
 <meta name="DaumWebMasterTool" content="22dd20f57faea1b7b131da081d584636ff29fa7fbfde811d47d329b108c082e7:Z1sDHiFp/naRimWdsgS5Tg==">
 <meta property="og:type" content="website"><meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:url" content="${SITE}/"><meta property="og:image" content="${ogimg}">
 <script type="application/ld+json">${JSON.stringify([
-{"@context":"https://schema.org","@type":"Organization","name":SITE_NAME,"url":SITE+"/","logo":SITE+"/favicon.svg","description":"카드단말기 판매·설치 전문. 전국 지역별 빠른 설치, 설치비·가맹비·관리비 0원.","areaServed":"KR","contactPoint":{"@type":"ContactPoint","contactType":"sales","areaServed":"KR","availableLanguage":"Korean"}},
+{"@context":"https://schema.org","@type":"Organization","name":SITE_NAME,"url":SITE+"/","logo":SITE+"/favicon.svg","description":"카드단말기·토스단말기 판매·설치 전문. 전국 지역별 빠른 설치, 설치비·가맹비·관리비 0원.","areaServed":"KR","contactPoint":{"@type":"ContactPoint","contactType":"sales","areaServed":"KR","availableLanguage":"Korean"}},
 {"@context":"https://schema.org","@type":"WebSite","name":SITE_NAME,"url":SITE+"/"},
-{"@context":"https://schema.org","@type":"Service","serviceType":"카드단말기 판매·설치","provider":{"@type":"Organization","name":SITE_NAME},"areaServed":"KR","description":"유선·무선 카드단말기 설치 상담. 카드 가맹 등록 대행, 설치비·가맹비·관리비 0원. 신용·체크카드와 삼성·애플·카카오·네이버페이 등 간편결제 지원."}
+{"@context":"https://schema.org","@type":"Service","serviceType":"카드단말기·토스단말기 판매·설치","provider":{"@type":"Organization","name":SITE_NAME},"areaServed":"KR","description":"유선·무선 카드단말기 설치 상담. 카드 가맹 등록 대행, 설치비·가맹비·관리비 0원. 신용·체크카드와 삼성·애플·카카오·네이버페이 등 간편결제 지원."}
 ])}</script>
 ${HEAD_ICON}
 <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap" rel="stylesheet">
@@ -2262,7 +2262,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 </div></header>
 
 <section class="hero"><div class="wrap">
-  <span class="kicker">유선 · 무선 카드단말기</span>
+  <span class="kicker">유선 · 무선 카드단말기 · 토스단말기</span>
   <h1>손님이 <em>어디서</em> 계산하세요?<br>그거 하나면 정해져요</h1>
   <p class="lead">기종 비교, 통신사 선택, 카드사 등록 — 사장님이 하실 건 없어요. 계산하는 자리만 골라주세요.</p>
   <div class="choose">
@@ -2276,7 +2276,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 
 <section id="prod"><div class="wrap">
   <h2>둘 중 하나만 고르시면 돼요</h2>
-  <p class="lead">기종 비교 안 하셔도 돼요. 손님이 계산하는 자리만 보고 유선인지 무선인지 정하면 끝이에요.</p>
+  <p class="lead">기종 비교 안 하셔도 돼요. 손님이 계산하는 자리만 보고 유선인지 무선인지 정하면 끝이에요. 토스단말기도 유선·무선 둘 다 취급합니다.</p>
   <div class="prods">
     <div class="prod w"><h3>유선 단말기</h3><div class="sub">카운터에 두고 쓰는 기본형</div>
       <ul><li>인터넷선 꽂아서 씀, 승인 빠르고 안 끊김</li><li>충전 신경 안 써도 됨</li><li>IC칩·마그네틱·삼성페이·애플페이</li><li>영수증·현금영수증 바로 출력</li></ul>
@@ -2343,6 +2343,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
     <details><summary>매달 나가는 돈 있어요?</summary><p>관리비, 설치비, 가맹비는 없어요. 단말기 조건은 업종 따라 다르니까 상담할 때 말씀드리고, 문자로 정리해서 보내드려요.</p></details>
     <details><summary>지금 쓰는 단말기가 있는데 바꿀 수 있어요?</summary><p>네. 기존 계약서 사진 보내주시면 위약금 있는지랑 해지 순서 같이 봐드려요. 새 거 먼저 등록하고 기존 거 끊는 게 순서예요.</p></details>
     <details><summary>고장 나면요?</summary><p>전화로 원인 먼저 보고, 기기 문제면 교체해 드려요. 그 사이에 결제 못 받는 일 없게 처리합니다.</p></details>
+    <details><summary>토스단말기도 돼요?</summary><p>네, 취급해요. 유선·무선 둘 다 있고, 일반 단말기랑 조건 비교해서 맞는 쪽으로 안내드려요.</p></details>
     <details><summary>배달앱 주문도 돼요?</summary><p>앱에서 이미 결제된 건 따로 할 거 없고요, 현장 결제 주문은 무선 단말기로 받으시면 돼요.</p></details>
   </div>
 </div></section>
@@ -2467,11 +2468,12 @@ function llms(){
   for(const [,arr] of dongOf) dongN+=arr.length;
   const body=`# ${SITE_NAME} (${SITE_HOST})
 
-> ${SITE_NAME}는 전국 어디서나 카드단말기(신용카드 결제 단말기)를 판매하고 설치해 주는 결제 단말기 전문 업체입니다. 시·도에서 시·군·구, 읍·면·동까지 지역별로 설치 안내를 제공하며, 설치비·가맹비·관리비 없이 단말기 비용만으로 시작할 수 있습니다. 신규 개업 매장과 기존 단말기 교체 모두 다루고, 카드 가맹 신청 서류까지 대행합니다. 문의는 사이트의 전화·문자 버튼으로 받으며 연중무휴입니다.
+> ${SITE_NAME}는 전국 어디서나 카드단말기(신용카드 결제 단말기)와 토스단말기를 판매하고 설치해 주는 결제 단말기 전문 업체입니다. 시·도에서 시·군·구, 읍·면·동까지 지역별로 설치 안내를 제공하며, 설치비·가맹비·관리비 없이 단말기 비용만으로 시작할 수 있습니다. 신규 개업 매장과 기존 단말기 교체 모두 다루고, 카드 가맹 신청 서류까지 대행합니다. 문의는 사이트의 전화·문자 버튼으로 받으며 연중무휴입니다.
 
 ## 주요 서비스
-- 유선 데스크 단말기 설치 — 계산대에 고정해서 쓰는 기본형, 월 9,900원(3년 할부)
-- 무선 이동형 단말기 설치 — 테이블 결제와 배달·이동이 잦은 매장용, 110,000원 또는 90,000원 일시불
+- 유선 데스크 단말기 설치 — 계산대에 고정해서 쓰는 기본형
+- 무선 이동형 단말기 설치 — 테이블 결제와 배달·이동이 잦은 매장용
+- 토스단말기 설치 — 유선·무선 모두 취급, 일반 단말기와 조건 비교 안내
 - 간편결제 지원 — 신용·체크카드와 삼성페이·카카오페이·네이버페이·제로페이 등 주요 간편결제
 - 카드 가맹 신청 대행 — 사업자등록증 등 서류 안내와 가맹 등록 절차 진행
 - 단말기 교체 — 기존 가맹 정보를 유지한 채 장비만 최신으로 교체
@@ -2500,8 +2502,8 @@ function llms(){
   A. 손님이 계산대로 모이는 매장은 유선 데스크형이 편하고, 테이블에서 결제하거나 배달·야외 판매가 있는 매장은 무선 이동형이 맞습니다.
 - Q. 설치비나 가맹비가 따로 드나요?
   A. 설치비·가맹비·관리비는 받지 않습니다. 단말기 비용과 카드사 결제 수수료 외에 추가로 내는 돈은 없습니다.
-- Q. 단말기 값은 어떻게 되나요?
-  A. 유선 데스크 단말기는 월 9,900원 3년 할부이고, 무선 이동형은 110,000원 또는 90,000원 일시불입니다.
+- Q. 토스단말기도 취급하나요?
+  A. 유선·무선 모두 취급하며, 일반 단말기와 조건을 비교해 매장에 맞는 쪽으로 안내합니다.
 - Q. 설치까지 얼마나 걸리나요?
   A. 상담과 가맹 서류 정리가 끝나면 방문 설치와 개통을 진행합니다. 지역과 서류 상태에 따라 보통 며칠 안에 끝납니다.
 - Q. 쓰던 단말기를 교체해도 되나요?
