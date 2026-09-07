@@ -2603,6 +2603,11 @@ export default {
     const __blk = blockScraper(request); if(__blk) return __blk;
     const url=new URL(request.url);
     const path=url.pathname.replace(/\/+$/,"")||"/";
+    /* 표준 도메인 고정: workers.dev·www 등 다른 호스트로 들어오면 SITE 로 301.
+       POST(/api/track)는 메서드가 바뀌므로 GET/HEAD 와 비 API 경로만 넘긴다 */
+    if((request.method==="GET"||request.method==="HEAD") && url.hostname!==SITE_HOST && !path.startsWith("/api/")){
+      return new Response(null,{status:301,headers:{"location":SITE+path+url.search,"cache-control":"public, max-age=3600"}});
+    }
     if(path==="/api/track"&&request.method==="POST"){try{const b=await request.json();
     /* 같은 방문자가 같은 버튼을 반복해 눌러도 1건만 기록·발송한다 */
     if (await tkDup(env, SITE_KEY, b.type, (b.page || '').slice(0, 300), request.headers.get('CF-Connecting-IP') || '')) {
