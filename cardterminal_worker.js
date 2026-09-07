@@ -296,7 +296,7 @@ function htmlResp(b){ return new Response(b,{headers:{"cache-control":"public, m
 const HTML_CACHE_SEC = 21600;
 /* 캐시 키에 버전을 붙인다. 본문을 고친 뒤 이 값을 올리면 이전 엣지 캐시가
    즉시 무시된다 (캐시 비우기 API 권한이 없어도 배포만으로 무효화된다). */
-const HTML_CACHE_VER = "4";
+const HTML_CACHE_VER = "5";
 function edgeCache(){ return (typeof caches !== "undefined" && caches.default) ? caches.default : null; }
 function htmlCacheKey(request){
   try { const u = new URL(request.url); u.searchParams.set("_cv", HTML_CACHE_VER); return new Request(u.toString(), { method: "GET" }); }
@@ -2260,7 +2260,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .fl .sms{background:var(--amber);color:var(--ink)}
 @media(max-width:600px){
   .fl{right:0;left:0;bottom:0;flex-direction:row;gap:0}
-  .fl a{flex:1;border-radius:0;height:58px;font-size:16px;font-weight:800;gap:8px}
+  .fl a{flex:1;border-radius:0;height:58px;font-size:16px;font-weight:800}
   body{padding-bottom:58px}
 }
 @media(prefers-reduced-motion:no-preference){
