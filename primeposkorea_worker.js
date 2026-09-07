@@ -296,7 +296,7 @@ function htmlResp(b){ return new Response(b,{headers:{"cache-control":"public, m
 const HTML_CACHE_SEC = 21600;
 /* 캐시 키에 버전을 붙인다. 본문을 고친 뒤 이 값을 올리면 이전 엣지 캐시가
    즉시 무시된다 (캐시 비우기 API 권한이 없어도 배포만으로 무효화된다). */
-const HTML_CACHE_VER = "9";
+const HTML_CACHE_VER = "10";
 function edgeCache(){ return (typeof caches !== "undefined" && caches.default) ? caches.default : null; }
 function htmlCacheKey(request){
   try { const u = new URL(request.url); u.searchParams.set("_cv", HTML_CACHE_VER); return new Request(u.toString(), { method: "GET" }); }
@@ -1936,7 +1936,7 @@ function shell({title,desc,canonical,ogimg,crumb,h1,metaArea,leadText,bodyMain,s
 <link rel="canonical" href="${canonical}">
 <meta property="og:type" content="website"><meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${canonical}">
-<meta property="og:image" content="${ogimg}"><meta name="naver-site-verification" content="a37c6cb31417a8289cdd72f99d49220cdf9f6b32">${HEAD_ICON}
+<meta property="og:image" content="${ogimg}"><meta name="naver-site-verification" content="a37c6cb31417a8289cdd72f99d49220cdf9f6b32"><meta name="msvalidate.01" content="411e58b67c684fb7b73b7d0115023da2">${HEAD_ICON}
 <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>${REGION_STYLE}</style>
@@ -2094,7 +2094,7 @@ function renderHome(){
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title}</title><meta name="description" content="${desc}"><link rel="canonical" href="${SITE}/">
-<meta name="naver-site-verification" content="a37c6cb31417a8289cdd72f99d49220cdf9f6b32">
+<meta name="naver-site-verification" content="a37c6cb31417a8289cdd72f99d49220cdf9f6b32"><meta name="msvalidate.01" content="411e58b67c684fb7b73b7d0115023da2">
 <meta property="og:type" content="website"><meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:url" content="${SITE}/"><meta property="og:image" content="${ogimg}">
 <script type="application/ld+json">${JSON.stringify([
 {"@context":"https://schema.org","@type":"Organization","name":SITE_NAME,"url":SITE+"/","logo":SITE+"/favicon.svg","description":"카드단말기·토스단말기 판매·설치 전문. 전국 지역별 빠른 설치, 설치비·가맹비·관리비 0원.","areaServed":"KR","contactPoint":{"@type":"ContactPoint","contactType":"sales","areaServed":"KR","availableLanguage":"Korean"}},
