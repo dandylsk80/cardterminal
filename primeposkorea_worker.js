@@ -158,7 +158,7 @@ const REGIONS = [{"name":"부산광역시 북구 덕천1동","sido":"부산광�
 const SITE_NAME = "프라임포스";                     /* 사이트명 */
 const SITE  = "https://primeposkorea.com";          /* 도메인 (13개 사이트 공통 규격: https URL) */
 const SITE_HOST = SITE.replace(/^https?:\/\//, ""); /* 위 도메인의 호스트명 */
-const SITE_KEY  = "cardterminal";                   /* D1 events.site 값 · 워커명 */
+const SITE_KEY  = "primeposkorea";                   /* D1 events.site 값 · 워커명 */
 const PHONE = "010-9876-8282";
 const SMS   = "010-9876-8282";
 /* tel:/sms: href 에는 하이픈 없는 번호를 쓴다 (인앱 브라우저·일부 문자앱이 하이픈을 못 읽는다) */
@@ -337,7 +337,7 @@ sidoList.sort((a,b)=>a.sido.localeCompare(b.sido,"ko"));
 for(const [,arr] of gugunOf) arr.sort((a,b)=>a.gu.localeCompare(b.gu,"ko"));
 for(const [,arr] of dongOf) arr.sort((a,b)=>a.dong.localeCompare(b.dong,"ko"));
 const SIDO_SHORT={seoul:"서울",busan:"부산",daegu:"대구",incheon:"인천",gwangju:"광주",daejeon:"대전",ulsan:"울산",sejong:"세종",gyeonggi:"경기",gangwon:"강원",chungbuk:"충북",chungnam:"충남",jeonbuk:"전북",jeonnam:"전남",gyeongbuk:"경북",gyeongnam:"경남",jeju:"제주"};
-/* 메인 지역 버튼 순서 — _design/cardterminal-main-v1.html 원본 배치 */
+/* 메인 지역 버튼 순서 — _design/primeposkorea-main-v1.html 원본 배치 */
 const HOME_SIDO=["seoul","gyeonggi","incheon","chungbuk","chungnam","daejeon","sejong","gangwon","jeonbuk","jeonnam","gwangju","gyeongbuk","gyeongnam","daegu","ulsan","busan","jeju"];
 
 // ---- 스타일 ----
@@ -357,14 +357,14 @@ const NAVER_WA=`<script type="text/javascript" src="//wcs.naver.net/wcslog.js"><
 // ---- 사진 풀 (Pexels, 상업적 사용 무료) ----
 /* 사진: Pexels 실사진 100장을 저장소 image/ 에 담고 jsDelivr 로 서빙한다
    (기존 결제 사이트 5곳과 겹치지 않게 새로 선정) */
-const PHOTO_BASE = "https://cdn.jsdelivr.net/gh/dandylsk80/cardterminal@main/image/";
+const PHOTO_BASE = "https://cdn.jsdelivr.net/gh/dandylsk80/primeposkorea@main/image/";
 const PHOTO_IDS = [5239804,20051498,11316617,7561698,5835274,4968635,12920742,9304565,12920746,5239814,5239871,5239867,9122014,5849594,5239870,5239818,11009960,7621385,8657364,8834116,10330111,5239882,13466249,10330114,6023604,5242829,5239817,8554374,5239812,6023605,6684769,5239877,11344562,5239813,7621382,4968638,11412587,5242822,8657363,5836534,32559187,28097275,20117299,27605493,36964319,13926769,30424333,20843264,1137745,30948318,14490407,20434764,12784534,35901446,19723756,28272182,10940365,16563702,5864208,30766302,33233564,34654507,8475203,8475171,14933973,8422729,8475169,5410081,8475204,34674788,3933017,10376294,5414060,4473093,12495827,6720592,8475172,4473496,38178433,37758913,36729517,36753978,8201189,37667338,5409672,37937042,4921255,12935078,12935080,12935088,4921260,36724030,12935100,12935048,12935065,12935066,12935081,37594409,37594398,12935041];
 function photoUrl(seedStr){ const id=PHOTO_IDS[seedOf(seedStr)%PHOTO_IDS.length]; return PHOTO_BASE+"pexels-"+id+".jpg"; }
 
 // =====================================================================
 //  지역 페이지 문단 풀 (_design/content_pool.js 인라인 — var 유지)
 // =====================================================================
-// content_pool.js — 카드단말기(cardterminal) 지역 페이지 문단 풀
+// content_pool.js — 프라임포스(primeposkorea) 지역 페이지 문단 풀
 // 12섹션 × 4변형 = 48개. 토큰: {sido} {gugun} {dong} {tel}
 // 사용: renderPool(slug, {sido,gugun,dong,tel}) → HTML 문자열 (섹션 h2 + 본문)
 // 주의: const 대신 var 사용 (eval 스코프 문제 방지). 조사 교정은 기존 fixJosa()에 위임.
@@ -1803,7 +1803,7 @@ function poolFaqList(slug,v){
 }
 
 // =====================================================================
-//  지역 페이지 디자인 (_design/cardterminal-dong-sample.html)
+//  지역 페이지 디자인 (_design/primeposkorea-dong-sample.html)
 // =====================================================================
 const REGION_STYLE = `
 :root{--ink:#17231E;--green:#1E5A3C;--green-deep:#12402A;--green-soft:#DDEBE2;--paper:#F5F6F2;--line:#D9DDD6;--mute:#5E6A63;--amber:#E9A62A;--amber-deep:#C9871A;--r:14px}
@@ -1912,7 +1912,7 @@ function poolVars(sido,gugun,dong){ return {sido:sido,gugun:gugun,dong:dong,tel:
 /* FAQPage 구조화 데이터도 본문과 같은 조사 교정을 거친다 */
 function poolFaq(slug,v,names){ return poolFaqList(slug,v).map(x=>({q:fixJosa(x.q,names),a:fixJosa(x.a,names)})); }
 
-// ---- 공통 페이지 셸 (_design/cardterminal-dong-sample.html 레이아웃) ----
+// ---- 공통 페이지 셸 (_design/primeposkorea-dong-sample.html 레이아웃) ----
 function shell({title,desc,canonical,ogimg,crumb,h1,metaArea,leadText,bodyMain,seedStr,areaServed,trail,faq}){
   const pub=pubDate(seedStr), mod=modDate();
   const jsonld=[

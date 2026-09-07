@@ -1,5 +1,5 @@
-name = "cardterminal"
-main = "cardterminal_worker.js"
+name = "primeposkorea"
+main = "primeposkorea_worker.js"
 compatibility_date = "2026-06-04"
 
 [[d1_databases]]
