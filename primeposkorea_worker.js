@@ -296,7 +296,7 @@ function htmlResp(b){ return new Response(b,{headers:{"cache-control":"public, m
 const HTML_CACHE_SEC = 21600;
 /* 캐시 키에 버전을 붙인다. 본문을 고친 뒤 이 값을 올리면 이전 엣지 캐시가
    즉시 무시된다 (캐시 비우기 API 권한이 없어도 배포만으로 무효화된다). */
-const HTML_CACHE_VER = "8";
+const HTML_CACHE_VER = "9";
 function edgeCache(){ return (typeof caches !== "undefined" && caches.default) ? caches.default : null; }
 function htmlCacheKey(request){
   try { const u = new URL(request.url); u.searchParams.set("_cv", HTML_CACHE_VER); return new Request(u.toString(), { method: "GET" }); }
@@ -1916,10 +1916,12 @@ function poolFaq(slug,v,names){ return poolFaqList(slug,v).map(x=>({q:fixJosa(x.
 // ---- 공통 페이지 셸 (_design/primeposkorea-dong-sample.html 레이아웃) ----
 function shell({title,desc,canonical,ogimg,crumb,h1,metaArea,leadText,bodyMain,seedStr,areaServed,trail,faq}){
   const pub=pubDate(seedStr), mod=modDate();
+  /* 화면 제목에는 두되, 구조화 데이터에서는 키워드를 한 번 더 반복하지 않는다 */
+  const titleLd=title.replace("·토스단말기","");
   const jsonld=[
     {"@context":"https://schema.org","@type":"LocalBusiness","name":`${SITE_NAME} ${areaServed}`,"description":desc,"url":canonical,"image":ogimg,"areaServed":areaServed,"address":{"@type":"PostalAddress","addressCountry":"KR"}},
-    {"@context":"https://schema.org","@type":"WebPage","url":canonical,"name":title,"datePublished":ymd(pub),"dateModified":ymd(mod)},
-    {"@context":"https://schema.org","@type":"Article","headline":title,"description":desc,"image":ogimg,
+    {"@context":"https://schema.org","@type":"WebPage","url":canonical,"name":titleLd,"datePublished":ymd(pub),"dateModified":ymd(mod)},
+    {"@context":"https://schema.org","@type":"Article","headline":titleLd,"description":desc,"image":ogimg,
      "mainEntityOfPage":{"@type":"WebPage","@id":canonical},
      "datePublished":ymd(pub),"dateModified":ymd(mod),"inLanguage":"ko-KR",
      "author":{"@type":"Organization","name":SITE_NAME,"url":SITE+"/"},
@@ -1934,8 +1936,7 @@ function shell({title,desc,canonical,ogimg,crumb,h1,metaArea,leadText,bodyMain,s
 <link rel="canonical" href="${canonical}">
 <meta property="og:type" content="website"><meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${canonical}">
-<meta property="og:image" content="${ogimg}"><meta name="naver-site-verification" content="759d642455574827918eab08baa0d3a149a3de58"><meta name="DaumWebMasterTool" content="22dd20f57faea1b7b131da081d584636ff29fa7fbfde811d47d329b108c082e7:Z1sDHiFp/naRimWdsgS5Tg==">
-${HEAD_ICON}
+<meta property="og:image" content="${ogimg}"><meta name="naver-site-verification" content="a37c6cb31417a8289cdd72f99d49220cdf9f6b32">${HEAD_ICON}
 <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>${REGION_STYLE}</style>
@@ -1967,7 +1968,7 @@ function renderDong(r){
   const v=poolVars(r.sido,r.gu,r.dong);
   const body=fixJosa(poolBody(r.url,v,r.dong)+nearbyDong(r,v),[r.sido,r.gu,r.dong]);
   return shell({title:`${r.name} 카드단말기·토스단말기 설치 — ${SITE_NAME}`,
-    desc:`${r.name} 카드단말기·토스단말기 설치 안내. ${r.dong} 매장에 맞는 유선·무선 단말기 고르는 기준, 준비 서류, 가맹 등록, 정산까지 순서대로 정리했습니다.`,
+    desc:`${r.name} 카드단말기 설치 안내. ${r.dong} 매장에 맞는 유선·무선 단말기 고르는 기준, 준비 서류, 가맹 등록, 정산까지 순서대로 정리했습니다.`,
     canonical,ogimg,
     crumb:`<a href="/">홈</a><span>›</span><a href="/region">지역별 설치</a><span>›</span><a href="/region/${r.ss}">${esc(r.sido)}</a><span>›</span><a href="/region/${r.ss}/${r.gg}">${esc(r.gu)}</a><span>›</span>${esc(r.dong)}`,
     h1:`${esc(r.dong)} 카드단말기·토스단말기 설치 안내`, metaArea:`${r.sido} ${r.gu}`,
@@ -2001,7 +2002,7 @@ function renderGugun(ss, gg){
     +`<div class="child"><h2>${esc(gu)} 읍·면·동 선택</h2><div class="child-list">${links}</div></div>`
     +nearbyGuBlock(ss,gg,sido);
   return shell({title:`${sido} ${gu} 카드단말기·토스단말기 설치 — ${SITE_NAME}`,
-    desc:`${sido} ${gu} 카드단말기·토스단말기 설치 안내. ${gu} 내 읍·면·동별 안내와 단말기 고르는 기준, 준비 서류, 가맹 등록 절차를 정리했습니다.`,
+    desc:`${sido} ${gu} 카드단말기 설치 안내. ${gu} 내 읍·면·동별 안내와 단말기 고르는 기준, 준비 서류, 가맹 등록 절차를 정리했습니다.`,
     canonical,ogimg,
     crumb:`<a href="/">홈</a><span>›</span><a href="/region">지역별 설치</a><span>›</span><a href="/region/${ss}">${esc(sido)}</a><span>›</span>${esc(gu)}`,
     h1:`${esc(gu)} 카드단말기·토스단말기 설치 안내`, metaArea:sido,
@@ -2021,7 +2022,7 @@ function renderSido(ss){
   const body=fixJosa(poolBody(ss,v,sido),[sido])
     +`<div class="child"><h2>${esc(sido)} 시·군·구 선택</h2><div class="child-list">${links}</div></div>`;
   return shell({title:`${sido} 카드단말기·토스단말기 설치 — ${SITE_NAME}`,
-    desc:`${sido} 카드단말기·토스단말기 설치 안내. ${sido} 시·군·구별 안내와 단말기 고르는 기준, 준비 서류, 가맹 등록 절차를 정리했습니다.`,
+    desc:`${sido} 카드단말기 설치 안내. ${sido} 시·군·구별 안내와 단말기 고르는 기준, 준비 서류, 가맹 등록 절차를 정리했습니다.`,
     canonical,ogimg,
     crumb:`<a href="/">홈</a><span>›</span><a href="/region">지역별 설치</a><span>›</span>${esc(sido)}`,
     h1:`${esc(sido)} 카드단말기·토스단말기 설치 안내`, metaArea:"전국",
@@ -2084,7 +2085,7 @@ function renderRegionIndex(){
 // ---- 홈 ----
 function renderHome(){
   const title=`PRIMEpos ${SITE_NAME} — 유선·무선 카드단말기·토스단말기 설치 상담`;
-  const desc="기종 비교, 통신사 선택, 카드사 등록 — 사장님이 하실 건 없어요. 손님이 계산하는 자리만 골라주시면 유선인지 무선인지 바로 정해집니다. 토스단말기도 유선·무선 둘 다 취급합니다.";
+  const desc="기종 비교, 통신사 선택, 카드사 등록 — 사장님이 하실 건 없어요. 손님이 계산하는 자리만 골라주시면 유선인지 무선인지 바로 정해집니다.";
   const ogimg=photoUrl("home");
   /* 지역 버튼 18개 — 디자인 원본 순서 그대로, 마지막 "전체"는 /region */
   const sidoBtns=HOME_SIDO.map(ss=>`<a href="/region/${ss}">${SIDO_SHORT[ss]}</a>`).join("")
@@ -2093,13 +2094,12 @@ function renderHome(){
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${title}</title><meta name="description" content="${desc}"><link rel="canonical" href="${SITE}/">
-<meta name="naver-site-verification" content="759d642455574827918eab08baa0d3a149a3de58">
-<meta name="DaumWebMasterTool" content="22dd20f57faea1b7b131da081d584636ff29fa7fbfde811d47d329b108c082e7:Z1sDHiFp/naRimWdsgS5Tg==">
+<meta name="naver-site-verification" content="a37c6cb31417a8289cdd72f99d49220cdf9f6b32">
 <meta property="og:type" content="website"><meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:url" content="${SITE}/"><meta property="og:image" content="${ogimg}">
 <script type="application/ld+json">${JSON.stringify([
 {"@context":"https://schema.org","@type":"Organization","name":SITE_NAME,"url":SITE+"/","logo":SITE+"/favicon.svg","description":"카드단말기·토스단말기 판매·설치 전문. 전국 지역별 빠른 설치, 설치비·가맹비·관리비 0원.","areaServed":"KR","contactPoint":{"@type":"ContactPoint","contactType":"sales","areaServed":"KR","availableLanguage":"Korean"}},
 {"@context":"https://schema.org","@type":"WebSite","name":SITE_NAME,"url":SITE+"/"},
-{"@context":"https://schema.org","@type":"Service","serviceType":"카드단말기·토스단말기 판매·설치","provider":{"@type":"Organization","name":SITE_NAME},"areaServed":"KR","description":"유선·무선 카드단말기 설치 상담. 카드 가맹 등록 대행, 설치비·가맹비·관리비 0원. 신용·체크카드와 삼성·애플·카카오·네이버페이 등 간편결제 지원."}
+{"@context":"https://schema.org","@type":"Service","serviceType":"카드단말기 판매·설치","provider":{"@type":"Organization","name":SITE_NAME},"areaServed":"KR","description":"유선·무선 카드단말기 설치 상담. 카드 가맹 등록 대행, 설치비·가맹비·관리비 0원. 신용·체크카드와 삼성·애플·카카오·네이버페이 등 간편결제 지원."}
 ])}</script>
 ${HEAD_ICON}
 <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap" rel="stylesheet">
@@ -2526,7 +2526,7 @@ function robots(){
   const blockBots=["SemrushBot","AhrefsBot","AhrefsSiteAudit","MJ12bot","DotBot","DataForSeoBot","BLEXBot","rogerbot","SEOkicks","Barkrowler","serpstatbot"];
   const allow = aiBots.map(b=>`User-agent: ${b}\nAllow: /\n`+(b==="GPTBot"?"Crawl-delay: 10\n":"")).join("")
     + "# SEO 분석 크롤러 — 색인에 도움 안 되므로 차단\n" + blockBots.map(b=>`User-agent: ${b}\nDisallow: /\n`).join("");
-  const body=`#DaumWebMasterTool:22dd20f57faea1b7b131da081d584636ff29fa7fbfde811d47d329b108c082e7:Z1sDHiFp/naRimWdsgS5Tg==\n${allow}User-agent: *\nAllow: /\n\n# llms.txt: ${SITE}/llms.txt\nLlms-txt: ${SITE}/llms.txt\n# 전체 목록: ${SITE}/list\nSitemap: ${SITE}/sitemap.xml\n`;
+  const body=`${allow}User-agent: *\nAllow: /\n\n# llms.txt: ${SITE}/llms.txt\nLlms-txt: ${SITE}/llms.txt\n# 전체 목록: ${SITE}/list\nSitemap: ${SITE}/sitemap.xml\n#DaumWebMasterTool:d4555c0d476213ff4adef8948fce53b94ee1be496d20cf8d7a1d83cfe527fda4:FreFgz7Szjm9AAoTfEznAQ==\n`;
   return new Response(body,{headers:{"content-type":"text/plain; charset=UTF-8"}});
 }
 
