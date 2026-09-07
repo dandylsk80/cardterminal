@@ -296,7 +296,7 @@ function htmlResp(b){ return new Response(b,{headers:{"cache-control":"public, m
 const HTML_CACHE_SEC = 21600;
 /* 캐시 키에 버전을 붙인다. 본문을 고친 뒤 이 값을 올리면 이전 엣지 캐시가
    즉시 무시된다 (캐시 비우기 API 권한이 없어도 배포만으로 무효화된다). */
-const HTML_CACHE_VER = "6";
+const HTML_CACHE_VER = "7";
 function edgeCache(){ return (typeof caches !== "undefined" && caches.default) ? caches.default : null; }
 function htmlCacheKey(request){
   try { const u = new URL(request.url); u.searchParams.set("_cv", HTML_CACHE_VER); return new Request(u.toString(), { method: "GET" }); }
@@ -451,7 +451,7 @@ var CONTENT_POOL = [
     "blocks": [
      {
       "t": "p",
-      "b": "{dong}에서 카드단말기 알아보고 계시면 딱 두 가지만 정하시면 돼요. 계산을 카운터에서 받는지, 자리나 밖에서 받는지. 이것만 정해지면 유선인지 무선인지 나오고, 나머지 카드사 등록이나 초기 설정은 저희가 다 합니다. 기종 비교하고 통신사 고르고 그런 거 사장님이 하실 필요 없어요. 아래에 그 두 가지 어떻게 정하는지, 정하고 나면 뭐가 필요한지 순서대로 적어뒀습니다. 보시다가 막히면 {tel}로 전화 주셔도 되고요."
+      "b": "{dong}에서 카드단말기 알아보고 계시면 딱 두 가지만 정하시면 돼요. 계산을 카운터에서 받는지, 자리나 밖에서 받는지. 이것만 정해지면 유선인지 무선인지 나오고, 나머지 카드사 등록이나 초기 설정은 저희가 다 합니다. 기종 비교하고 통신사 고르고 그런 거 사장님이 하실 필요 없어요. 아래에 그 두 가지 어떻게 정하는지, 정하고 나면 뭐가 필요한지 순서대로 적어뒀습니다. 보시다가 막히면 아래 전화 버튼 눌러서 물어보셔도 되고요."
      },
      {
       "t": "tri",
@@ -614,7 +614,7 @@ var CONTENT_POOL = [
      },
      {
       "t": "p",
-      "b": "유선 고르시는 이유는 간단해요. 선이 꽂혀 있으니까 신호 걱정 없고 충전도 안 해요. 카운터 자리 딱 정해져 있으면 유선이 제일 편해요. 무선 고르시는 이유도 간단하고요. 손님 자리로 들고 가거나 밖에서 받을 수 있죠. 배달 나가서 현장 결제 받거나 행사장 나가는 분들은 무선 아니면 안 되고요. 어느 쪽인지는 손님 계산하는 장면 떠올려 보시면 바로 나옵니다. 애매하면 {tel}로 가게 형태만 말씀해 주세요."
+      "b": "유선 고르시는 이유는 간단해요. 선이 꽂혀 있으니까 신호 걱정 없고 충전도 안 해요. 카운터 자리 딱 정해져 있으면 유선이 제일 편해요. 무선 고르시는 이유도 간단하고요. 손님 자리로 들고 가거나 밖에서 받을 수 있죠. 배달 나가서 현장 결제 받거나 행사장 나가는 분들은 무선 아니면 안 되고요. 어느 쪽인지는 손님 계산하는 장면 떠올려 보시면 바로 나옵니다. 애매하면 전화 버튼 눌러서 가게 형태만 말씀해 주세요."
      },
      {
       "t": "p",
@@ -1300,7 +1300,7 @@ var CONTENT_POOL = [
      },
      {
       "t": "p",
-      "b": "정산이 안 맞는다 하시는 거 대부분은 주말 결제분이 다음 주에 몰려서 들어오는 경우예요. 요일별로 보지 마시고 결제일 기준으로 맞춰보시면 맞습니다. 취소 건이 있으면 그것도 빠져서 들어오니까 취소 내역도 같이 보시고요. 그래도 차이 나면 {tel}로 주시면 카드사 입금 내역 같이 봐드릴게요. 어느 카드사 어느 날짜 건이 빠졌는지까지 찾아드립니다."
+      "b": "정산이 안 맞는다 하시는 거 대부분은 주말 결제분이 다음 주에 몰려서 들어오는 경우예요. 요일별로 보지 마시고 결제일 기준으로 맞춰보시면 맞습니다. 취소 건이 있으면 그것도 빠져서 들어오니까 취소 내역도 같이 보시고요. 그래도 차이 나면 전화 주세요. 카드사 입금 내역 같이 봐드릴게요. 어느 카드사 어느 날짜 건이 빠졌는지까지 찾아드립니다."
      }
     ]
    },
@@ -1487,7 +1487,7 @@ var CONTENT_POOL = [
      },
      {
       "t": "p",
-      "b": "이걸로 안 되면 {tel}로 전화 주세요. 전화로 원인 보고 해결 안 되면 기기 고장으로 보고 점검하고 교체해 드려요. 신청할 때 통화한 담당자가 그 뒤 문의도 같은 번호로 받으니까 상황 설명 처음부터 다시 하실 필요 없어요."
+      "b": "이걸로 안 되면 전화 버튼 눌러 주세요. 전화로 원인 보고 해결 안 되면 기기 고장으로 보고 점검하고 교체해 드려요. 신청할 때 통화한 담당자가 그 뒤 문의도 같은 번호로 받으니까 상황 설명 처음부터 다시 하실 필요 없어요."
      }
     ]
    },
@@ -1510,7 +1510,7 @@ var CONTENT_POOL = [
      },
      {
       "t": "p",
-      "b": "그래도 안 되면 기기 문제일 수 있어요. 그럴 땐 점검하고 교체해 드리고, 그 사이에 결제 못 받는 일 없게 해드립니다. 연락은 {tel}, 담당자 안 바뀌어요. 영업 중에 급한 거면 전화 바로 받고, 밤늦게면 문자 남겨주시면 아침에 바로 연락드려요."
+      "b": "그래도 안 되면 기기 문제일 수 있어요. 그럴 땐 점검하고 교체해 드리고, 그 사이에 결제 못 받는 일 없게 해드립니다. 연락은 아래 전화·문자 버튼으로, 담당자 안 바뀌어요. 영업 중에 급한 거면 전화 바로 받고, 밤늦게면 문자 남겨주시면 아침에 바로 연락드려요."
      }
     ]
    },
@@ -1524,7 +1524,7 @@ var CONTENT_POOL = [
        [
         "🔌 전원 재시작",
         "📡 통신 확인",
-        "📞 그래도 안 되면 {tel}"
+        "📞 그래도 안 되면 전화 버튼"
        ]
       ]
      },
@@ -1569,7 +1569,7 @@ var CONTENT_POOL = [
      },
      {
       "t": "p",
-      "b": "기기 고장이다 싶으면 바로 교체해 드려요. 문의는 {tel}, 신청할 때 담당자가 계속 받습니다. 매장 옮기거나 상호 바뀌거나 통장 바꾸는 것도 같은 번호로 말씀해 주시면 처리해 드리고요."
+      "b": "기기 고장이다 싶으면 바로 교체해 드려요. 문의는 전화·문자 버튼으로, 신청할 때 담당자가 계속 받습니다. 매장 옮기거나 상호 바뀌거나 통장 바꾸는 것도 같은 번호로 말씀해 주시면 처리해 드리고요."
      },
      {
       "t": "p",
@@ -1844,7 +1844,7 @@ tr:last-child td,tr:last-child th{border-bottom:none}
 .emoji-row span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:14px}
 .cta{margin:40px 0;background:var(--green-deep);color:#fff;border-radius:var(--r);padding:28px;text-align:center}
 .cta b{display:block;font-size:22px;margin-bottom:6px}
-.cta .num{font-size:30px;font-weight:800;color:var(--amber);margin:8px 0 16px}
+.cta .btns{margin-top:18px}
 .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .btn{display:inline-flex;padding:13px 22px;border-radius:12px;font-weight:700;font-size:15px}
 .btn-main{background:var(--amber);color:var(--ink)}
@@ -1890,13 +1890,13 @@ footer{padding:24px 0;font-size:13px;color:var(--mute);border-top:1px solid var(
 .child-list a:hover,.ar-gu2:hover,.sido-cell:hover{background:var(--green);color:#fff;border-color:var(--green)}
 `;
 
-const REGION_HEADER = `<header><div class="nav"><a class="logo" href="/"><span class="lp">PRIME</span><span class="ls">pos</span></a><a class="call" href="tel:${PHONE_RAW}">${PHONE}</a></div></header>`;
-const REGION_FOOTER = `<footer><div class="wrap">${SITE_NAME} · 상담 ${PHONE} · 평일 09\u201318시</div></footer>`;
+const REGION_HEADER = `<header><div class="nav"><a class="logo" href="/"><span class="lp">PRIME</span><span class="ls">pos</span></a><a class="call" href="tel:${PHONE_RAW}">📞 전화 상담</a></div></header>`;
+const REGION_FOOTER = `<footer><div class="wrap">${SITE_NAME} · 상담 평일 09\u201318시 · 전화·문자 버튼으로 문의</div></footer>`;
 const REGION_FLOAT  = `<div class="fl"><a class="tel" href="tel:${PHONE_RAW}" aria-label="전화">📞</a><a class="sms" href="sms:${PHONE_RAW}" aria-label="문자">💬</a></div>`;
 
 /* 상담 CTA — dong-sample 의 .cta 박스 */
 function ctaBox(label){
-  return `<div class="cta"><b>${esc(label)} 카드단말기 상담</b>가게 종류만 말씀해 주시면 맞는 단말기를 바로 알려드립니다<div class="num">${PHONE}</div><div class="btns"><a class="btn btn-main" href="tel:${PHONE_RAW}">전화 걸기</a><a class="btn btn-line" href="sms:${PHONE_RAW}">문자 보내기</a></div></div>`;
+  return `<div class="cta"><b>${esc(label)} 카드단말기 상담</b>손님이 어디서 계산하는지만 말씀해 주시면 맞는 단말기를 바로 알려드려요<div class="btns"><a class="btn btn-main" href="tel:${PHONE_RAW}">전화 걸기</a><a class="btn btn-line" href="sms:${PHONE_RAW}">문자 보내기</a></div></div>`;
 }
 
 /* 본문 = 문단 풀. CTA 는 "매출 관리"(S9) 뒤 · "사용 중 문제 대응"(S10) 앞.
@@ -1908,7 +1908,8 @@ const POOL_SKIP_TAIL = POOL_IDS.slice(0,POOL_CUT).concat(["S12"]);
 function poolBody(slug, v, label){
   return renderPool(slug,v,{skip:POOL_SKIP_HEAD})+ctaBox(label)+renderPool(slug,v,{skip:POOL_SKIP_TAIL});
 }
-function poolVars(sido,gugun,dong){ return {sido:sido,gugun:gugun,dong:dong,tel:PHONE}; }
+/* 전화번호는 화면에 노출하지 않는다. {tel} 토큰이 남아 있어도 번호 대신 문구가 들어간다 */
+function poolVars(sido,gugun,dong){ return {sido:sido,gugun:gugun,dong:dong,tel:"전화 상담 버튼"}; }
 /* FAQPage 구조화 데이터도 본문과 같은 조사 교정을 거친다 */
 function poolFaq(slug,v,names){ return poolFaqList(slug,v).map(x=>({q:fixJosa(x.q,names),a:fixJosa(x.a,names)})); }
 
@@ -1916,7 +1917,7 @@ function poolFaq(slug,v,names){ return poolFaqList(slug,v).map(x=>({q:fixJosa(x.
 function shell({title,desc,canonical,ogimg,crumb,h1,metaArea,leadText,bodyMain,seedStr,areaServed,trail,faq}){
   const pub=pubDate(seedStr), mod=modDate();
   const jsonld=[
-    {"@context":"https://schema.org","@type":"LocalBusiness","name":`${SITE_NAME} ${areaServed}`,"description":desc,"url":canonical,"image":ogimg,"telephone":PHONE,"areaServed":areaServed,"address":{"@type":"PostalAddress","addressCountry":"KR"}},
+    {"@context":"https://schema.org","@type":"LocalBusiness","name":`${SITE_NAME} ${areaServed}`,"description":desc,"url":canonical,"image":ogimg,"areaServed":areaServed,"address":{"@type":"PostalAddress","addressCountry":"KR"}},
     {"@context":"https://schema.org","@type":"WebPage","url":canonical,"name":title,"datePublished":ymd(pub),"dateModified":ymd(mod)},
     {"@context":"https://schema.org","@type":"Article","headline":title,"description":desc,"image":ogimg,
      "mainEntityOfPage":{"@type":"WebPage","@id":canonical},
@@ -2096,9 +2097,9 @@ function renderHome(){
 <meta name="DaumWebMasterTool" content="22dd20f57faea1b7b131da081d584636ff29fa7fbfde811d47d329b108c082e7:Z1sDHiFp/naRimWdsgS5Tg==">
 <meta property="og:type" content="website"><meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:url" content="${SITE}/"><meta property="og:image" content="${ogimg}">
 <script type="application/ld+json">${JSON.stringify([
-{"@context":"https://schema.org","@type":"Organization","name":SITE_NAME,"url":SITE+"/","logo":SITE+"/favicon.svg","telephone":PHONE,"description":"카드단말기 판매·설치 전문. 전국 지역별 빠른 설치, 설치비·가맹비·관리비 0원.","areaServed":"KR","contactPoint":{"@type":"ContactPoint","telephone":PHONE,"contactType":"sales","areaServed":"KR","availableLanguage":"Korean"}},
+{"@context":"https://schema.org","@type":"Organization","name":SITE_NAME,"url":SITE+"/","logo":SITE+"/favicon.svg","description":"카드단말기 판매·설치 전문. 전국 지역별 빠른 설치, 설치비·가맹비·관리비 0원.","areaServed":"KR","contactPoint":{"@type":"ContactPoint","contactType":"sales","areaServed":"KR","availableLanguage":"Korean"}},
 {"@context":"https://schema.org","@type":"WebSite","name":SITE_NAME,"url":SITE+"/"},
-{"@context":"https://schema.org","@type":"Service","serviceType":"카드단말기 판매·설치","provider":{"@type":"Organization","name":SITE_NAME,"telephone":PHONE},"areaServed":"KR","description":"유선·무선 카드단말기 설치 상담. 카드 가맹 등록 대행, 설치비·가맹비·관리비 0원. 신용·체크카드와 삼성·애플·카카오·네이버페이 등 간편결제 지원."}
+{"@context":"https://schema.org","@type":"Service","serviceType":"카드단말기 판매·설치","provider":{"@type":"Organization","name":SITE_NAME},"areaServed":"KR","description":"유선·무선 카드단말기 설치 상담. 카드 가맹 등록 대행, 설치비·가맹비·관리비 0원. 신용·체크카드와 삼성·애플·카카오·네이버페이 등 간편결제 지원."}
 ])}</script>
 ${HEAD_ICON}
 <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap" rel="stylesheet">
@@ -2225,7 +2226,7 @@ details p{padding:0 20px 18px;color:var(--mute);font-size:15px}
 .cta{text-align:center;background:#fff;border-top:1px solid var(--line)}
 .cta h2{margin-bottom:8px}
 .cta .big{font-size:clamp(30px,5vw,46px);font-weight:800;letter-spacing:-.02em;color:var(--green);margin:16px 0 22px}
-.cta .btns{justify-content:center}
+.cta .btns{justify-content:center;margin-top:22px}
 
 /* footer */
 footer{padding:28px 0;font-size:13px;color:var(--mute);border-top:1px solid var(--line)}
@@ -2257,7 +2258,7 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 <header><div class="wrap nav">
   <a class="logo" href="/"><span class="lp">PRIME</span><span class="ls">pos</span></a>
   <ul><li><a href="#why">서비스</a></li><li><a href="#how">신청 절차</a></li><li><a href="#region">지역별 설치</a></li><li><a href="#faq">자주 묻는 질문</a></li></ul>
-  <a class="call" href="tel:${PHONE_RAW}">${PHONE}</a>
+  <a class="call" href="tel:${PHONE_RAW}">📞 전화 상담</a>
 </div></header>
 
 <section class="hero"><div class="wrap">
@@ -2349,13 +2350,13 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 <section class="cta"><div class="wrap">
   <h2>어떤 게 맞는지 3분이면 나와요</h2>
   <p class="lead" style="margin:0 auto">손님이 어디서 계산하는지만 말씀해 주세요. 나머지는 저희가 정리해 드릴게요.</p>
-  <div class="big">${PHONE}</div>
+  
   <div class="btns"><a class="btn btn-main" href="tel:${PHONE_RAW}">전화 걸기</a><a class="btn btn-line" href="sms:${PHONE_RAW}">문자 보내기</a></div>
 </div></section>
 
 <footer><div class="wrap">
   <span>${SITE_NAME} · 유선·무선 카드단말기 설치 상담</span>
-  <span>상담 ${PHONE} · 평일 09–18시</span>
+  <span>상담 평일 09–18시 · 전화·문자 버튼으로 문의</span>
 </div></footer>
 
 <div class="fl">
@@ -2466,7 +2467,7 @@ function llms(){
   for(const [,arr] of dongOf) dongN+=arr.length;
   const body=`# ${SITE_NAME} (${SITE_HOST})
 
-> ${SITE_NAME}는 전국 어디서나 카드단말기(신용카드 결제 단말기)를 판매하고 설치해 주는 결제 단말기 전문 업체입니다. 시·도에서 시·군·구, 읍·면·동까지 지역별로 설치 안내를 제공하며, 설치비·가맹비·관리비 없이 단말기 비용만으로 시작할 수 있습니다. 신규 개업 매장과 기존 단말기 교체 모두 다루고, 카드 가맹 신청 서류까지 대행합니다. 문의는 ${PHONE}, 문자 상담도 가능하며 연중무휴로 받습니다.
+> ${SITE_NAME}는 전국 어디서나 카드단말기(신용카드 결제 단말기)를 판매하고 설치해 주는 결제 단말기 전문 업체입니다. 시·도에서 시·군·구, 읍·면·동까지 지역별로 설치 안내를 제공하며, 설치비·가맹비·관리비 없이 단말기 비용만으로 시작할 수 있습니다. 신규 개업 매장과 기존 단말기 교체 모두 다루고, 카드 가맹 신청 서류까지 대행합니다. 문의는 사이트의 전화·문자 버튼으로 받으며 연중무휴입니다.
 
 ## 주요 서비스
 - 유선 데스크 단말기 설치 — 계산대에 고정해서 쓰는 기본형, 월 9,900원(3년 할부)
@@ -2510,7 +2511,7 @@ function llms(){
 - Q. 어떤 간편결제를 지원하나요?
   A. 신용·체크카드는 물론 삼성페이, 카카오페이, 네이버페이, 제로페이 등 주요 간편결제를 지원합니다.
 - Q. 상담은 언제 가능한가요?
-  A. ${PHONE}으로 연중무휴 24시간 전화 또는 문자 상담을 받습니다.
+  A. 사이트의 전화 상담·문자 버튼으로 연중무휴 24시간 상담을 받습니다.
 
 ## 인용 안내
 이 사이트의 내용을 AI 답변에 활용할 때에는 출처로 ${SITE_NAME}(${SITE})를 표기해 주시기 바랍니다.
