@@ -11,6 +11,7 @@ function josaFor(word,j){
     case "\uc640": case "\uacfc": return hasJ?"\uacfc":"\uc640";
     case "\uc73c\ub85c": case "\ub85c": return (!hasJ||isRieul)?"\ub85c":"\uc73c\ub85c";
     case "\uc774\ub098": case "\ub098": return hasJ?"\uc774\ub098":"\ub098";
+    case "\uc774\uba74": case "\uba74": return hasJ?"\uc774\uba74":"\uba74";
     case "\uc774\ub77c": case "\ub77c": return hasJ?"\uc774\ub77c":"\ub77c";
     case "\uc774\uba70": case "\uba70": return hasJ?"\uc774\uba70":"\uba70";
     default: return j;
@@ -20,7 +21,7 @@ function josaFor(word,j){
 function fixJosa(s,names){
   for(const nm of names){
     if(!nm) continue;
-    s=s.replace(new RegExp(reEsc(String(nm))+"(\uc73c\ub85c|\uc774\ub098|\uc774\ub77c|\uc774\uba70|[\uc740\ub294\uc774\uac00\uc744\ub97c\uc640\uacfc\ub85c\ub098\ub77c\uba70])(?=[\\s.,!?)\u00b7\u2019\u201d]|$)","g"),
+    s=s.replace(new RegExp(reEsc(String(nm))+"(\uc73c\ub85c|\uc774\ub098|\uc774\ub77c|\uc774\uba70|\uc774\uba74|\uba74|[\uc740\ub294\uc774\uac00\uc744\ub97c\uc640\uacfc\ub85c\ub098\ub77c\uba70])(?=[\\s.,!?)\u00b7\u2019\u201d]|$)","g"),
       function(m,j){ return nm+josaFor(nm,j); });
   }
   return s;
@@ -340,298 +341,6 @@ const SIDO_SHORT={seoul:"서울",busan:"부산",daegu:"대구",incheon:"인천",
 const HOME_SIDO=["seoul","gyeonggi","incheon","chungbuk","chungnam","daejeon","sejong","gangwon","jeonbuk","jeonnam","gwangju","gyeongbuk","gyeongnam","daegu","ulsan","busan","jeju"];
 
 // ---- 스타일 ----
-const STYLE = `
-:root{--ink:#0c1322;--ink-soft:#44506a;--paper:#f7f6f1;--card:#fff;--accent:#a01f3c;--accent-deep:#6e1228;--line:#e7e4da;--shadow:0 24px 60px -24px rgba(12,19,34,.28)}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:"Pretendard",system-ui,sans-serif;background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.7;word-break:keep-all;overflow-wrap:break-word}
-.wrap{max-width:1120px;margin:0 auto;padding:0 24px}.narrow{max-width:800px}
-header{position:sticky;top:0;z-index:50;background:rgba(247,246,241,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.nav{display:flex;align-items:center;justify-content:space-between;height:64px}
-.logo{font-weight:800;font-size:1.16rem;letter-spacing:-.03em;display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--ink)}
-.logo-mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#a01f3c,#6e1228);display:grid;place-items:center;box-shadow:0 6px 14px -6px rgba(160,31,60,.7);flex:none}
-.logo-text{font-weight:800}
-
-.nav-links{display:flex;gap:22px;font-size:.93rem;font-weight:500;color:var(--ink-soft)}
-.nav-links a{text-decoration:none;color:inherit}
-.btn{display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:.95rem;padding:11px 20px;border-radius:999px;text-decoration:none;border:none;cursor:pointer}
-.btn-accent{background:var(--accent);color:#ffffff}.btn-primary{background:var(--ink);color:#fff}.btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
-@media(max-width:720px){.nav-links{display:none}}
-h1{font-size:clamp(1.9rem,4.4vw,2.7rem);font-weight:800;letter-spacing:-.03em;line-height:1.18}
-h2{font-size:1.4rem;font-weight:800;letter-spacing:-.02em;margin:38px 0 12px}
-.region-hero{padding:30px 0 8px}
-.crumb{font-size:.86rem;color:var(--ink-soft);margin-bottom:6px}.crumb a{color:var(--ink-soft);text-decoration:none}
-.dateline{font-size:.82rem;color:var(--ink-soft);margin:0 0 10px}
-.hero-photo{position:relative;border-radius:18px;overflow:hidden;margin:18px 0 8px;box-shadow:var(--shadow)}
-.hero-photo img{width:100%;height:auto;display:block;aspect-ratio:1200/628;object-fit:cover}
-.hero-cap{position:absolute;left:0;right:0;bottom:0;padding:22px 22px 18px;color:#fff;background:linear-gradient(180deg,transparent,rgba(12,19,34,.82));font-size:1.02rem;font-weight:600}
-.hero-cap b{font-size:1.4rem;font-weight:800;letter-spacing:-.02em}
-.lead{font-size:1.06rem;color:var(--ink-soft);margin:14px 0 0}
-.content p{margin:12px 0;color:#23304a}.content strong{color:var(--ink)}
-.pills{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
-.pill{font-size:.82rem;font-weight:700;color:var(--accent-deep);background:rgba(160,31,60,.12);padding:6px 13px;border-radius:999px}
-.faq{border:1px solid var(--line);border-radius:14px;margin:10px 0;background:var(--card);overflow:hidden}
-.faq .q{padding:14px 18px;font-weight:800;background:rgba(160,31,60,.06);font-size:1rem}
-.faq .a{padding:13px 18px 16px;color:#23304a}
-.rtable-wrap{overflow-x:auto;margin:14px 0}
-.rtable{width:100%;border-collapse:separate;border-spacing:0;font-size:.92rem;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 14px 30px -22px rgba(160,31,60,.3)}
-.rtable th,.rtable td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line)}
-.rtable thead th{background:linear-gradient(180deg,#fbeef1,#f6dee4);font-weight:800;color:var(--accent-deep)}
-.rtable tbody th{background:#fbeef1;font-weight:700;color:var(--ink);width:96px}
-.rtable tbody tr:last-child th,.rtable tbody tr:last-child td{border-bottom:0}
-.rtable td b{color:var(--ink)}.rtable small{color:var(--ink-soft)}
-.rtable-2 td:first-child{font-weight:700}
-.ibox{background:linear-gradient(160deg,#fff,#fbeef1);border:1px solid #f1dbe1;border-left:5px solid var(--accent);border-radius:14px;padding:20px 22px;margin:16px 0;box-shadow:0 16px 32px -24px rgba(160,31,60,.32)}
-.ibox-h{font-weight:800;font-size:1.05rem;margin-bottom:14px}
-.ibox-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px}
-.ibox-grid div{display:flex;align-items:center;gap:9px;font-size:.93rem;color:#3a2530}
-.ibox-grid span{font-size:1.1rem}
-.ibox-grid b{color:var(--accent-deep)}
-.callout{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;background:linear-gradient(135deg,#a01f3c,#5d0f23);color:#fff;border-radius:18px;padding:24px 26px;margin:18px 0;box-shadow:0 24px 44px -26px rgba(93,15,35,.6)}
-.callout-t{font-weight:800;font-size:1.08rem}
-.callout-b{color:rgba(255,255,255,.78);font-size:.92rem;margin-top:6px;max-width:40em}
-.callout-btn{flex:none;background:#fff;color:var(--accent-deep);font-weight:800;padding:13px 20px;border-radius:999px;text-decoration:none;box-shadow:0 12px 22px -10px rgba(0,0,0,.4)}
-@media(max-width:560px){.ibox-grid{grid-template-columns:1fr}.callout{padding:22px}.callout-btn{width:100%;text-align:center}}
-.products{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:14px 0;max-width:600px}
-.product{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 20px}
-.product .ptag{font-size:.74rem;font-weight:700;color:var(--accent-deep)}
-.product h3{font-size:1.12rem;font-weight:800;margin:10px 0 6px}
-.product .pdesc{font-size:.9rem;color:var(--ink-soft);min-height:42px}
-.product .price{margin-top:14px;font-weight:800;font-size:1.12rem;color:var(--ink)}
-.product .price small{font-weight:600;color:var(--ink-soft);font-size:.82rem}
-@media(max-width:760px){.products{grid-template-columns:1fr}}
-.cta{background:var(--ink);border-radius:22px;padding:38px 26px;text-align:center;color:#fff;margin:34px 0}
-.cta h2{color:#fff;margin:0 0 8px}.cta p{color:#aeb8cc;margin:0 0 18px}
-.cta-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.child{margin:34px 0}
-.child-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.child-list a{font-size:.9rem;color:var(--ink);background:var(--card);border:1px solid var(--line);padding:8px 14px;border-radius:10px;text-decoration:none}
-.child-list a:hover{border-color:var(--accent);color:var(--accent-deep)}
-.sido-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-top:14px}
-.sido-cell{display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#fbeef1);border:1px solid #f1dbe1;border-radius:12px;padding:14px 6px;font-weight:700;font-size:1rem;color:var(--ink);text-decoration:none;box-shadow:0 8px 16px -14px rgba(160,31,60,.3);transition:transform .16s,box-shadow .16s,color .16s,border-color .16s}
-.sido-cell:hover{transform:translateY(-3px);border-color:var(--accent);color:var(--accent-deep);box-shadow:0 14px 22px -14px rgba(160,31,60,.45)}
-@media(max-width:760px){.sido-grid{grid-template-columns:repeat(4,1fr)}}
-@media(max-width:430px){.sido-grid{grid-template-columns:repeat(3,1fr)}}
-.float-cta{position:fixed;right:18px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;z-index:90}
-.fab{display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;text-decoration:none;color:#fff;box-shadow:0 16px 30px -10px rgba(26,8,16,.5),inset 0 1px 0 rgba(255,255,255,.25);transition:transform .18s;position:relative}
-.fab svg{width:24px;height:24px}
-.fab-call{background:linear-gradient(160deg,#c9355a,#a01f3c);animation:fabPulse 2.2s ease-in-out infinite}
-.fab-sms{background:linear-gradient(160deg,#3a2030,#1c0f18)}
-.fab:hover{transform:scale(1.09)}
-.fab::after{content:attr(data-label);position:absolute;right:66px;top:50%;transform:translateY(-50%);background:#1c0f18;color:#fff;font-size:.8rem;font-weight:700;padding:7px 12px;border-radius:9px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .18s;box-shadow:0 8px 16px -8px rgba(26,8,16,.5)}
-.fab:hover::after{opacity:1}
-@keyframes fabPulse{0%,100%{box-shadow:0 16px 30px -10px rgba(26,8,16,.5),0 0 0 0 rgba(201,53,90,.55)}50%{box-shadow:0 16px 30px -10px rgba(26,8,16,.5),0 0 0 13px rgba(201,53,90,0)}}
-@media(max-width:760px){.float-cta{right:14px;top:auto;bottom:16px;transform:none;gap:10px}.fab{width:52px;height:52px}.fab::after{display:none}}
-@media(prefers-reduced-motion:reduce){.fab-call{animation:none}}
-footer{border-top:1px solid var(--line);margin-top:46px;padding:22px 0;background:#fff}
-.ft{display:flex;justify-content:space-between;align-items:center;gap:14px 22px;flex-wrap:wrap}
-.ft-l{display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap}
-.ft-l span{font-size:.84rem;color:var(--ink-soft)}
-.ft-r{display:flex;gap:18px;font-size:.88rem;flex-wrap:wrap}
-.ft-r a{color:var(--ink-soft);text-decoration:none}
-.ft-r a:hover{color:var(--accent-deep)}
-.ft-regions{display:flex;flex-wrap:wrap;gap:7px 14px;align-items:center;margin-top:16px;padding-top:15px;border-top:1px solid var(--line);font-size:.85rem}
-.ft-regions b{font-size:.8rem;color:var(--ink);margin-right:4px}
-.ft-regions a{color:var(--ink-soft);text-decoration:none}
-.ft-regions a:hover{color:var(--accent-deep)}
-.ft-regions .all{font-weight:700;color:var(--accent-deep)}
-.ft-bot{margin-top:12px;font-size:.8rem;color:var(--ink-soft)}
-/* ===== 홈 전용 ===== */
-
-/* ===== 홈(입체) ===== */
-.d-hero{position:relative;overflow:hidden;background:radial-gradient(90% 120% at 78% -10%,#5a1228 0%,#2a0a16 46%,#190710 100%);color:#fff}
-.d-floor{position:absolute;left:-12%;right:-12%;bottom:-34%;height:78%;background-image:linear-gradient(rgba(255,255,255,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.075) 1px,transparent 1px);background-size:48px 48px;transform:perspective(640px) rotateX(63deg);-webkit-mask-image:linear-gradient(180deg,transparent,#000 32%,transparent 96%);mask-image:linear-gradient(180deg,transparent,#000 32%,transparent 96%);pointer-events:none}
-.d-glow{position:absolute;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(214,69,104,.34),transparent 64%);filter:blur(10px);pointer-events:none}
-.d-hero-in{position:relative;display:grid;grid-template-columns:1.04fr .96fr;gap:48px;align-items:center;padding:76px 0 110px}
-.d-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.79rem;font-weight:700;letter-spacing:.04em;color:#ffd3dd;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);padding:7px 15px;border-radius:999px;backdrop-filter:blur(6px)}
-.d-hero h1{font-size:clamp(2.15rem,5vw,3.45rem);font-weight:800;letter-spacing:-.04em;line-height:1.08;margin:20px 0 0}
-.d-hero h1 em{font-style:normal;color:#ff7d9d}
-.d-hero .sub{font-size:1.06rem;color:rgba(255,255,255,.72);margin:18px 0 0;max-width:30em}
-.d-chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
-.d-chip{font-size:.95rem;font-weight:700;color:#fff;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);padding:10px 16px;border-radius:13px;backdrop-filter:blur(6px);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
-.d-chip b{color:#ff9eb4;font-weight:800}
-.d-ctas{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
-.btn-wine{background:linear-gradient(160deg,#c9355a,#a01f3c);color:#fff;box-shadow:0 16px 30px -14px rgba(201,53,90,.75),inset 0 1px 0 rgba(255,255,255,.25)}
-.btn-glass{background:rgba(255,255,255,.09);color:#fff;border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(6px)}
-.d-trust{display:flex;gap:8px 20px;flex-wrap:wrap;margin-top:26px;font-size:.85rem;color:rgba(255,255,255,.6)}
-.d-trust span{display:inline-flex;align-items:center;gap:7px}
-.d-trust svg{color:#ff7d9d}
-/* --- 3D 단말기 --- */
-.d-scene{perspective:1300px;display:grid;place-items:center}
-.d-rig{position:relative;transform-style:preserve-3d;transform:rotateX(11deg) rotateY(-17deg);animation:dRig 7s ease-in-out infinite alternate}
-@keyframes dRig{from{transform:rotateX(11deg) rotateY(-17deg) translateY(0)}to{transform:rotateX(9deg) rotateY(-13deg) translateY(-12px)}}
-.d-term{width:248px;background:linear-gradient(165deg,#332433,#181020 64%);border-radius:26px;padding:17px 17px 20px;box-shadow:0 70px 90px -34px rgba(10,3,8,.7),0 28px 36px -22px rgba(10,3,8,.6),inset 0 1px 0 rgba(255,255,255,.1)}
-.d-screen{background:linear-gradient(155deg,#7e1631,#a01f3c 55%,#c9355a);border-radius:15px;padding:16px 15px;box-shadow:inset 0 2px 8px rgba(0,0,0,.35)}
-.d-screen .ok{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;color:#fff;margin-bottom:10px;animation:dPulse 2.4s ease-in-out infinite}
-@keyframes dPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.35)}50%{box-shadow:0 0 0 9px rgba(255,255,255,0)}}
-.d-screen small{display:block;font-size:.72rem;color:rgba(255,255,255,.75);font-weight:600}
-.d-screen b{font-size:1.5rem;font-weight:800;color:#fff;letter-spacing:-.02em}
-.d-keys{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:15px}
-.d-key{aspect-ratio:1.7;background:#241a2c;border-radius:8px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.07)}
-.d-key.go{background:linear-gradient(160deg,#c9355a,#a01f3c)}
-.d-slot{height:7px;border-radius:999px;background:#0d0813;margin-top:15px;box-shadow:inset 0 2px 4px rgba(0,0,0,.8)}
-.d-paycard{position:absolute;left:-86px;top:-42px;width:168px;aspect-ratio:1.586;border-radius:14px;background:linear-gradient(150deg,#4a1027,#7e1631 52%,#b22a4c);box-shadow:0 40px 50px -22px rgba(10,3,8,.75),inset 0 1px 0 rgba(255,255,255,.22);transform:translateZ(70px) rotate(-9deg);padding:13px 15px;animation:dCard 5s 0.4s ease-in-out infinite alternate}
-@keyframes dCard{from{transform:translateZ(70px) rotate(-9deg) translateY(0)}to{transform:translateZ(84px) rotate(-7deg) translateY(-10px)}}
-.d-paycard .chip{width:30px;height:22px;border-radius:5px;background:linear-gradient(150deg,#f3d27e,#caa14e);box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
-.d-paycard .no{margin-top:24px;font-size:.78rem;letter-spacing:.16em;color:rgba(255,255,255,.85);font-weight:700}
-.d-paycard .nm{margin-top:6px;font-size:.6rem;letter-spacing:.1em;color:rgba(255,255,255,.5);font-weight:600}
-.d-tag{position:absolute;font-size:.76rem;font-weight:800;color:#3a0d1c;background:rgba(255,255,255,.94);padding:8px 13px;border-radius:999px;box-shadow:0 18px 28px -14px rgba(10,3,8,.65);backdrop-filter:blur(4px);white-space:nowrap}
-.d-tag.t1{right:-58px;top:8px;transform:translateZ(46px);animation:dT 4.4s .2s ease-in-out infinite alternate}
-.d-tag.t2{right:-44px;bottom:64px;transform:translateZ(58px);animation:dT 4.4s 1.1s ease-in-out infinite alternate}
-.d-tag.t3{left:-64px;bottom:-14px;transform:translateZ(40px);animation:dT 4.4s .6s ease-in-out infinite alternate}
-@keyframes dT{from{margin-top:0}to{margin-top:-9px}}
-/* --- 0원 띠(히어로에 겹침) --- */
-.d-zero{position:relative;z-index:6;margin-top:-58px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.d-zcard{background:linear-gradient(180deg,#fff,#fbeef1);border-radius:18px;padding:20px 18px;border:1px solid #f1dbe1;box-shadow:inset 0 1px 0 #fff,0 26px 46px -28px rgba(160,31,60,.36),0 4px 10px -6px rgba(160,31,60,.16);transition:transform .22s,box-shadow .22s}
-.d-zcard:hover{transform:translateY(-5px);box-shadow:0 40px 58px -28px rgba(26,8,16,.5)}
-.d-zcard .n{font-size:clamp(1.45rem,2.6vw,1.9rem);font-weight:800;letter-spacing:-.03em}
-.d-zcard .n b{color:var(--accent)}
-.d-zcard .l{font-size:.84rem;color:var(--ink-soft);margin-top:3px}
-/* --- 공통 섹션 --- */
-.d-sec{padding:58px 0 6px}
-.d-sec .head{max-width:38em;margin-bottom:26px}
-.d-sec .head h2{font-size:clamp(1.5rem,3.1vw,2.05rem);font-weight:800;letter-spacing:-.028em;margin:0}
-.d-sec .head p{color:var(--ink-soft);margin:10px 0 0;font-size:1.01rem}
-.d-prods{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;max-width:700px;perspective:1300px}
-.d-prod{position:relative;background:linear-gradient(180deg,#fff,#fbeef1);border:1px solid #f1dbe1;border-bottom:4px solid rgba(160,31,60,.2);border-radius:20px;padding:27px 24px;box-shadow:inset 0 1px 0 #fff,0 30px 48px -28px rgba(160,31,60,.34),0 12px 20px -14px rgba(160,31,60,.24);transition:transform .28s,box-shadow .28s;transform-style:preserve-3d}
-.d-prod:hover{transform:translateY(-9px) rotateX(4deg) scale(1.012);box-shadow:inset 0 1px 0 #fff,0 52px 70px -32px rgba(160,31,60,.42),0 18px 26px -16px rgba(160,31,60,.3)}
-.d-prod .tag{font-size:.74rem;font-weight:800;color:var(--accent-deep)}
-.d-prod .badge{position:absolute;top:-11px;right:18px;background:linear-gradient(160deg,#c9355a,#a01f3c);color:#fff;font-size:.72rem;font-weight:800;padding:5px 12px;border-radius:999px;box-shadow:0 8px 16px -8px rgba(160,31,60,.8)}
-.d-prod.feat{background:linear-gradient(180deg,#fff,#f6dee4);border-color:rgba(160,31,60,.5);box-shadow:0 0 0 3px rgba(160,31,60,.12),inset 0 1px 0 #fff,0 30px 48px -28px rgba(160,31,60,.4)}
-.d-prod h3{font-size:1.16rem;font-weight:800;margin:11px 0 7px}
-.d-prod p{font-size:.92rem;color:var(--ink-soft);min-height:40px}
-.d-prod .price{margin-top:15px;font-size:1.42rem;font-weight:800;letter-spacing:-.02em}
-.d-prod .price small{font-size:.82rem;font-weight:600;color:var(--ink-soft)}
-.d-feats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;perspective:1300px}
-.d-feat{background:linear-gradient(180deg,#fff,#fbeef1);border:1px solid #f1dbe1;border-bottom:4px solid rgba(160,31,60,.18);border-radius:17px;padding:24px 21px;box-shadow:inset 0 1px 0 #fff,0 22px 36px -24px rgba(160,31,60,.3),0 8px 14px -10px rgba(160,31,60,.2);transition:transform .26s,box-shadow .26s}
-.d-feat:hover{transform:translateY(-7px) rotateX(3deg);box-shadow:inset 0 1px 0 #fff,0 40px 56px -28px rgba(160,31,60,.4)}
-.d-feat .ic{width:46px;height:46px;border-radius:13px;background:linear-gradient(155deg,#c9355a,#7a1730);display:grid;place-items:center;color:#fff;box-shadow:0 12px 20px -8px rgba(160,31,60,.6),inset 0 1px 0 rgba(255,255,255,.3)}
-.ic-orange{background:linear-gradient(155deg,#ff8a3d,#e8590c)!important;box-shadow:0 12px 20px -8px rgba(232,89,12,.55),inset 0 1px 0 rgba(255,255,255,.3)!important}
-.ic-green{background:linear-gradient(155deg,#34c759,#1f9d4d)!important;box-shadow:0 12px 20px -8px rgba(31,157,77,.5),inset 0 1px 0 rgba(255,255,255,.3)!important}
-.ic-blue{background:linear-gradient(155deg,#4d8bff,#1f5fe0)!important;box-shadow:0 12px 20px -8px rgba(31,95,224,.5),inset 0 1px 0 rgba(255,255,255,.3)!important}
-.ic-purple{background:linear-gradient(155deg,#a76bff,#6d28d9)!important;box-shadow:0 12px 20px -8px rgba(109,40,217,.5),inset 0 1px 0 rgba(255,255,255,.3)!important}
-.ic-teal{background:linear-gradient(155deg,#2dd4bf,#0d9488)!important;box-shadow:0 12px 20px -8px rgba(13,148,136,.5),inset 0 1px 0 rgba(255,255,255,.3)!important}
-.ic-pink{background:linear-gradient(155deg,#ff7aa8,#e0367f)!important;box-shadow:0 12px 20px -8px rgba(224,54,127,.5),inset 0 1px 0 rgba(255,255,255,.3)!important}
-.d-feat h3{font-size:1.03rem;font-weight:800;margin:13px 0 6px}
-.d-feat p{font-size:.9rem;color:var(--ink-soft)}
-.d-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;position:relative}
-.d-step{position:relative;text-align:center;background:none;border:0;box-shadow:none;padding:0}
-.d-step .num{position:relative;z-index:2;display:inline-grid;place-items:center;width:56px;height:56px;border-radius:50%;background:linear-gradient(155deg,#c9355a,#7a1730);color:#fff;font-weight:800;font-size:1.18rem;box-shadow:0 14px 24px -8px rgba(160,31,60,.6),inset 0 1px 0 rgba(255,255,255,.3),0 0 0 9px var(--paper)}
-.d-step:not(:last-child)::after{content:"";position:absolute;top:28px;left:50%;width:calc(100% + 24px);height:3px;background:repeating-linear-gradient(90deg,rgba(160,31,60,.55) 0 7px,transparent 7px 15px);z-index:1}
-.d-step-body{margin-top:18px}
-.d-step h3{font-size:1.12rem;font-weight:800;margin:0 0 6px}
-.d-step p{font-size:.92rem;color:var(--ink-soft);max-width:22em;margin:0 auto}
-.d-pays{display:flex;flex-wrap:wrap;gap:10px}
-.d-pay{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:.92rem;background:#fff;border:1px solid var(--line);padding:10px 16px;border-radius:12px;box-shadow:0 8px 16px -12px rgba(26,8,16,.3),inset 0 1px 0 #fff;transition:transform .18s,box-shadow .18s}
-.d-pay:hover{transform:translateY(-3px);box-shadow:0 14px 22px -12px rgba(26,8,16,.4)}
-.pay-ic{display:inline-grid;place-items:center;line-height:0}
-.pay-ic svg{display:block;border-radius:5px}
-.pay-samsung{border-color:#b8c2ec;background:linear-gradient(180deg,#fff,#eef1fc);color:#15208a}
-.pay-kakao{border-color:#f4dd5a;background:linear-gradient(180deg,#fffdf0,#fff7c8);color:#3a1d1d}
-.pay-naver{border-color:#9be7be;background:linear-gradient(180deg,#fff,#e9faf0);color:#03894a}
-.pay-zero{border-color:#a9c6e6;background:linear-gradient(180deg,#fff,#eaf2fb);color:#005bac}
-.pay-card{border-color:#d7dce3;background:linear-gradient(180deg,#fff,#f1f3f6);color:#3a434f}
-.pay-etc{border-color:#f1dbe1;background:linear-gradient(180deg,#fff,#fbeef1);color:#a01f3c}
-.d-region{background:linear-gradient(135deg,#a01f3c,#5d0f23);border-radius:24px;padding:44px 38px;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:26px;flex-wrap:wrap;box-shadow:0 34px 60px -30px rgba(93,15,35,.65)}
-.d-region h2{color:#fff;font-size:clamp(1.45rem,3vw,1.95rem);font-weight:800;letter-spacing:-.025em;margin:0}
-.d-region p{color:rgba(255,255,255,.75);margin:8px 0 0;font-weight:500}
-.d-final{background:radial-gradient(110% 130% at 50% -20%,#3a1020,#190710 70%);color:#fff;border-radius:26px;padding:58px 30px;text-align:center;margin:54px 0 0;box-shadow:0 40px 70px -34px rgba(10,3,8,.6)}
-.d-final h2{color:#fff;font-size:clamp(1.65rem,3.4vw,2.25rem);font-weight:800;letter-spacing:-.03em;margin:0}
-.d-final p{color:rgba(255,255,255,.62);margin:12px 0 24px;font-size:1.03rem}
-.d-final .ph{display:block;font-size:1.65rem;font-weight:800;letter-spacing:-.02em;margin-top:20px}
-.d-final .ph a{color:#fff;text-decoration:none}
-.cta-free{margin-top:16px;font-size:.88rem;color:rgba(255,255,255,.55);font-weight:700;letter-spacing:.01em}
-@keyframes dUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
-.d-anim{animation:dUp .75s cubic-bezier(.2,.7,.2,1) both}
-@media(max-width:920px){
-  .d-hero-in{grid-template-columns:1fr;gap:28px;padding:48px 0 66px;text-align:center}
-  .d-hero-in>div:first-child{max-width:460px;margin-inline:auto}
-  .d-eyebrow{margin:0 auto}
-  .d-hero h1{font-size:clamp(1.95rem,6.8vw,2.55rem);line-height:1.18}
-  .d-hero .sub{margin:16px auto 0;max-width:23em;font-size:1.02rem;line-height:1.64}
-  .d-chips,.d-trust{justify-content:center}
-  .d-chip{font-size:.9rem;padding:9px 14px}
-  .d-trust{gap:8px 18px;margin-top:22px}
-  .d-ctas{flex-direction:column;max-width:380px;margin-left:auto;margin-right:auto;gap:11px}
-  .d-ctas .btn{width:100%;justify-content:center;padding:15px 18px}
-  .d-scene{margin-top:8px}
-  .d-paycard{left:-30px}
-  .d-tag.t1{right:-8px}.d-tag.t2{right:0}.d-tag.t3{left:-14px}
-  .d-zero{grid-template-columns:repeat(2,1fr);margin-top:-40px;gap:12px}
-  .d-zcard{padding:17px 16px}
-  .d-prods,.d-feats{grid-template-columns:1fr}
-  .d-steps{grid-template-columns:1fr;gap:0;text-align:left}
-  .d-step{display:grid;grid-template-columns:56px 1fr;gap:16px;text-align:left;padding:0 0 26px}
-  .d-step .num{box-shadow:0 14px 24px -8px rgba(160,31,60,.6),inset 0 1px 0 rgba(255,255,255,.3)}
-  .d-step:not(:last-child)::after{top:56px;left:27px;width:3px;height:calc(100% - 56px);background:repeating-linear-gradient(180deg,rgba(160,31,60,.5) 0 7px,transparent 7px 14px)}
-  .d-step-body{margin-top:0;padding-top:5px}
-  .d-step p{margin:0;max-width:none}
-  .d-sec{padding:40px 0 4px}
-  .d-region{padding:32px 24px}
-  .d-final{padding:46px 22px;margin-top:42px}
-  .d-final .ph{font-size:1.5rem}
-}
-@media(max-width:560px){
-  .wrap{padding:0 22px}
-  .d-hero-in{padding:42px 0 60px;gap:26px}
-  .d-hero h1{font-size:clamp(1.78rem,6.4vw,2.3rem)}
-  .d-hero .sub{font-size:1rem;max-width:21em}
-  .d-scene{transform:scale(.92);transform-origin:top center}
-  .d-term{width:212px}
-  .d-paycard{width:146px;left:-18px;top:-28px}
-  .d-tag{font-size:.72rem;padding:7px 11px}
-  .d-tag.t1{right:-2px;top:2px}.d-tag.t2{right:2px}.d-tag.t3{left:-6px}
-  .d-zero{margin-top:-30px}
-  .d-zcard .n{font-size:1.5rem}
-}
-@media(max-width:380px){.d-zero{grid-template-columns:1fr}.d-scene{transform:scale(.88);transform-origin:top center}}
-.ar-sido{margin:30px 0 0;padding-top:22px;border-top:1px solid var(--line)}
-.ar-sido h2{font-size:1.22rem;font-weight:800;margin:0 0 14px}
-.ar-sido h2 a{color:var(--ink);text-decoration:none}
-.ar-sido h2 span{font-size:.8rem;font-weight:600;color:var(--ink-soft);margin-left:6px}
-.ar-guns{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-.ar-gu{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:0 10px 22px -18px rgba(26,8,16,.35)}
-.ar-gu-h{display:inline-block;font-weight:800;font-size:.96rem;color:var(--accent-deep);text-decoration:none;margin-bottom:8px}
-.ar-dongs{display:flex;flex-wrap:wrap;gap:5px 10px}
-.ar-dongs a{font-size:.84rem;color:var(--ink-soft);text-decoration:none}
-.ar-dongs a:hover{color:var(--accent-deep)}
-.ar-guns2{display:flex;flex-wrap:wrap;gap:8px}
-.ar-gu2{font-size:.9rem;font-weight:600;color:var(--ink);background:#fff;border:1px solid var(--line);padding:9px 14px;border-radius:10px;text-decoration:none;box-shadow:0 6px 14px -12px rgba(160,31,60,.3)}
-.ar-gu2:hover{border-color:var(--accent);color:var(--accent-deep)}
-@media(max-width:680px){.ar-guns{grid-template-columns:1fr}}
-/* --- 레이더 지도 --- */
-.r-stage{margin-top:6px}
-.r-plane{position:relative;width:100%;max-width:660px;margin:0 auto;aspect-ratio:879/801;background:radial-gradient(circle at 46% 44%,#34101f 0%,#1d0a13 62%,#150610 100%);border:1px solid rgba(255,255,255,.09);border-radius:30px;box-shadow:0 70px 100px -42px rgba(10,3,8,.7),inset 0 0 70px rgba(160,31,60,.18)}
-.r-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.r-svg .r-inset{fill:rgba(255,255,255,.035);stroke:rgba(255,158,180,.4);stroke-width:1;vector-effect:non-scaling-stroke}
-.r-svg path{fill:#451528;stroke:rgba(255,158,180,.5);stroke-width:1;vector-effect:non-scaling-stroke;cursor:pointer;transition:fill .18s,filter .18s}
-.r-svg a:hover path,.r-svg a:focus path{fill:var(--accent);filter:drop-shadow(0 8px 14px rgba(255,125,157,.4))}
-.r-grid{position:absolute;inset:0;border-radius:inherit;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:44px 44px;pointer-events:none}
-.r-rings{position:absolute;inset:0;border-radius:inherit;background:repeating-radial-gradient(circle at 46% 44%,transparent 0 52px,rgba(255,125,157,.09) 52px 53px);pointer-events:none}
-.r-sweep{position:absolute;left:46%;top:44%;width:150%;aspect-ratio:1;transform:translate(-50%,-50%) rotate(0deg);background:conic-gradient(rgba(255,125,157,.42),rgba(255,125,157,.12) 14%,transparent 24%);border-radius:50%;-webkit-mask-image:radial-gradient(circle,#000 0%,#000 55%,transparent 72%);mask-image:radial-gradient(circle,#000 0%,#000 55%,transparent 72%);animation:rSweep 5s linear infinite;pointer-events:none;mix-blend-mode:screen}
-@keyframes rSweep{to{transform:translate(-50%,-50%) rotate(360deg)}}
-.r-core{position:absolute;left:46%;top:44%;width:10px;height:10px;border-radius:50%;background:#ff9eb4;box-shadow:0 0 14px #ff7d9d;transform:translate(-50%,-50%)}
-.r-pin{position:absolute;transform:translate(-50%,-50%);transform-style:preserve-3d;text-decoration:none;z-index:3}
-.r-dot{display:block;width:10px;height:10px;border-radius:50%;background:#ff7d9d;box-shadow:0 0 10px rgba(255,125,157,.9);margin:0 auto;position:relative}
-.r-dot::after{content:"";position:absolute;inset:-7px;border-radius:50%;border:2px solid rgba(255,125,157,.55);animation:rPing 2.8s var(--d,0s) ease-out infinite}
-@keyframes rPing{0%{transform:scale(.5);opacity:1}80%,100%{transform:scale(1.7);opacity:0}}
-.r-tag{display:block;transform:translateY(-6px);transform-origin:bottom center;font-size:.83rem;font-weight:800;color:#0b0b0d;background:#fff;padding:6px 12px;border-radius:999px;box-shadow:0 16px 24px -12px rgba(10,3,8,.7);white-space:nowrap;margin-bottom:4px;transition:background .16s,color .16s,transform .16s}
-.r-pin:hover .r-tag{background:var(--accent);color:#fff;transform:translateY(-10px)}
-.r-grid-list{display:none;grid-template-columns:repeat(4,1fr);gap:9px;max-width:560px;margin:18px auto 0}
-.r-grid-list a{display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#fbeef1);border:1px solid #f1dbe1;border-radius:11px;padding:13px 6px;font-weight:700;font-size:.96rem;color:var(--ink);text-decoration:none;box-shadow:0 8px 16px -14px rgba(160,31,60,.3)}
-.r-grid-list a:active{transform:scale(.97)}
-@media(max-width:620px){
-  .r-tag{display:none}
-  .r-dot{width:12px;height:12px}
-  .r-grid-list{display:grid}
-  .r-plane{max-width:380px}
-}
-@media(max-width:430px){.r-grid-list{grid-template-columns:repeat(3,1fr)}}
-.r-cap{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-top:22px;font-size:.88rem;color:var(--ink-soft)}
-.r-cap a{color:var(--accent-deep);font-weight:700;text-decoration:none}
-@media(max-width:660px){.r-tag{font-size:.68rem;padding:5px 9px}.r-plane{border-radius:22px}}
-@media(prefers-reduced-motion:reduce){.d-anim,.d-rig,.d-paycard,.d-tag,.d-screen .ok,.r-sweep,.r-dot::after{animation:none}}
-
-`;
 
 const FAV_ICO="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";
 const FAV_P32="iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFNUlEQVR4nLWX34tdVxXHP2vvc+7MnczEoaE28Se2pmBjA7F5EAsR+iIUoYjcVrEvDYGppc/qg1DEP6BIfahQWqpPTkQfJCgUrJ2S+GAg6DRItYZWY+gvMpPpzDRz797r24dzzr3n3pnUTNOcy2Fz99n7fNda+7u+ax0DWKQXH+RkfoKvF9+458AJSY/0PR8RKh2QhEsIcBypnkNI1KOGYzPnCCQkDYJxLqPn/vXq4Jmf8FJqMG2x14sPnjyZXzj87SNzZefn0exrfWW2ch69eBKceu5DwDWxtzDDMJLnM2vqP/7Ya0vnFulFA/jzPb27u1YsRWx+LW1lgQnCh4OLYXR2AK/2Ca+jJeRZrm4oY/K8+r4Pji1cWFq2xbt6ndumOb0nlEevpK2BYeWNer4D+GjONZiORbmZ+mcvdd+9N9zW5fhMKI+upa1scHPBBTLK9dTPnVAc/eTVfceDux7tK0tg1yTcxwVe7wEsySXp0ULi0FbOJmQSLXBBCFAbVV0Vq4ej2nNgNZjVa6rB8ZRbpARB6Csj6VABFMN0aqytQfsr75FzHvPYx16ksUwZeknzv3Ki3LtnPLJqsoSi2H7mIHdyznz+u/fT/cz+KpetcbRaJ4Gsckc0IW89dwczrvznEq/+5g8QwzCy7aMpJs+cEOivbXDoByc4+P3v8HFcc5/7FKd/+hSd+TmUvR0Bim2Ec0GMzB0+yOblVZQci6H1Ol0LZ9ul7FgRufXIl6CIw2NpwB1hfzz8LY0YXZ2pCf7tm6yRKcx2AbmDEYgiObNbTmYc3CUKTYC7RAiBy29c4t2N9yhv1ACJmekue/bvR+5DBR1KtLfAJYHBYGuLexceJh7YV6WU2UdFBzM2Lr7Fa4unsLIc6QcgeU3CYYoBGIOtPl89/hB777rjBnwfXe+88k/+8avfUXZK5CNwV1sD6nDJKpptrl5hNiW8n7AiIEEYI+N1BCBXBN5cWa3TeKQDjWYUbXltCCJEiLG6Z4qP7LmsMiDEOgNaAtX8QlvhxnS7FpLXT73IqQcW+PtTz1dz2j0lxUis2uBVFrQLS7PIM3Fmmo3/vcWfTvwIT4n/vvAyM/tv5Yu9+1HOWIy7M0Kj6LaLWxilYX02VKPFyGBjk7S+ydQn5pA7V9+5XL9s10EYHsGoWlZHH8bKbJOKwehfWWf+zi/wlR8uIMHBh77Jnd97AKRdk9HlLc/Hu6hiElxWWVt0p1B2jv74cb782MNM3zJfbcwZuD5dUHYCUEx1RuSbqKyhXZ2ciiw5ZS6+/NdhDZi+ZR4AMyMUBaGI13XHqRKLgQsv/oWcUk3GthFUJBxNgpJTznY597PnWbv4JnOfPVBJaK2GTarSyuum+WiXY/dKVVfeuMjffv17ytk9eM4jLtSRL0bej1jqZhCN87/8LZ7yKEU1ES21U7cRGR9r3YiBztwsTOAMOeAiVZFo9X41WTrze8eql1rPhmFsR6/VW7S1xVPa5iTV2lRk/HxJOJzIkqq0HLZWKe3Yek0aVYH7REvGNsI14FnyArOB/HzA/eloZq7Kv3b3ejPA69IvAyPwdOh29j27kQdnu6GI2TW42eBZPpiyEN/3dHbmbX/WAH5x+7G7u6FcMmx+Pfcz9afZZMM6WbqvBb4jsSV3SR0LMclXryaOPbmyvBwW6cWFC0vL64PBfcn9zHQoYmEhaJvn/w98tGYSXBIRCx0LMbmfWVe678mV5eVe83Ha/jz/9O2ckPNIX/mIo/L6wj65ZhzcpYHBOTM9d/rtV555CVIP4knIHwBqt5yQeZQzBAAAAABJRU5ErkJggg==";
@@ -659,182 +368,1596 @@ const FOOTER = `${FLOAT}<footer><div class="wrap ft"><div class="ft-l"><a href="
 const PHOTO_IDS = [18617717,11869767,35812095,9167771,33386568,36248217,18235146,31509751,18023166,34181819,18562520,18617716,11504189,23895207,18235152,31249642,10581511,12525494,19193795,32265504,37464365,35228395,30339533,20850207,32549955,14264221,20124001,32432713,31266794,10232714,28826082,5855893,18355379,19571375,20157487,31872742,18161370,30679783,11506732,8386651,23834128,4005036,20590976,32549954,12570667,28806028,10279357,19999076,16891088,22748765,37780185,30209076,34985863,14612129,29148185];
 function photoUrl(seedStr){ const id=PHOTO_IDS[seedOf(seedStr)%PHOTO_IDS.length]; return `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=1200&h=628&fit=crop`; }
 
-// ---- 제품 카드 (가격 포함) ----
-function products(label){
-  return `<div class="products">
-<div class="product"><span class="ptag">기본형</span><h3>유선 데스크 단말기</h3><p class="pdesc">카운터 고정형. 안정적이고 빠른 승인.</p><div class="price">9,900원 <small>· 3년 할부</small></div></div>
-<div class="product"><span class="ptag">휴대 간편</span><h3>무선 이동형 단말기</h3><p class="pdesc">테이블·배달·이동매장. 충전식 종일 사용.</p><div class="price">110,000원 / 90,000원 <small>· 일시불</small></div></div>
-</div>`;
+// =====================================================================
+//  지역 페이지 문단 풀 (_design/content_pool.js 인라인 — var 유지)
+// =====================================================================
+// content_pool.js — 카드단말기(cardterminal) 지역 페이지 문단 풀
+// 12섹션 × 4변형 = 48개. 토큰: {sido} {gugun} {dong} {tel}
+// 사용: renderPool(slug, {sido,gugun,dong,tel}) → HTML 문자열 (섹션 h2 + 본문)
+// 주의: const 대신 var 사용 (eval 스코프 문제 방지). 조사 교정은 기존 fixJosa()에 위임.
+
+var CONTENT_POOL = [
+ {
+  "id": "S1",
+  "title": "도입",
+  "variants": [
+   {
+    "id": "S1-A",
+    "title": "처음이라 막막한 분께",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "{dong}에서 가게 준비하시는 사장님들, 카드단말기 때문에 한 번씩 막히시죠. 유선을 써야 하는지 무선을 써야 하는지, 서류는 뭘 내야 하는지, 신청하면 언제 되는지. 인터넷 찾아보면 물어볼 데는 많은데 답이 다 다르고, 전화해 보면 자기네 거 좋다는 얘기만 하고요. 여기서는 그 순서를 처음부터 끝까지 한 번에 정리해 드릴게요. 기기 고르는 기준, 서류 네 가지, 매달 나가는 돈 없는 이유, 고장 났을 때 어떻게 하는지까지. 읽고 나서 전화 한 통이면 신청까지 끝납니다."
+     },
+     {
+      "t": "flow",
+      "groups": [
+       [
+        "📞 전화 상담",
+        "📷 서류 사진 전송",
+        "🏦 카드사 가맹 등록",
+        "💳 결제 시작"
+       ]
+      ]
+     }
+    ]
+   },
+   {
+    "id": "S1-B",
+    "title": "몇 년 쓸 장비니까",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "카드단말기는 한 번 놓으면 몇 년은 쓰는 물건이라 처음에 잘 고르셔야 돼요. 나중에 바꾸려면 카드사 등록도 다시 해야 하고 번거롭거든요. {dong} 매장도 손님이 어디서 계산하느냐에 따라 카운터에 두는 게 편한 곳이 있고, 들고 다니는 게 편한 곳이 있어요. 사장님들 상담할 때 늘 물어보시는 순서대로 — 기기 고르기, 서류, 비용, 정산, 고장 났을 때 — 쭉 적어봤습니다. 다른 데서 들으신 얘기랑 비교하면서 보셔도 되고요."
+     },
+     {
+      "t": "tri",
+      "cells": [
+       {
+        "h": "💸 관리비 없음",
+        "b": "매달 나가는 돈 없음"
+       },
+       {
+        "h": "🚚 설치비 없음",
+        "b": "따로 내는 돈 없음"
+       },
+       {
+        "h": "🏦 가맹비 없음",
+        "b": "카드사 등록 대행"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "S1-C",
+    "title": "설명 대신 순서로",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "\"단말기 하나 놓는데 뭐가 이렇게 복잡해요?\" {dong} 사장님들한테 제일 많이 듣는 말이에요. 카드사 등록에 통신 방식에 영수증 설정까지, 처음 하시면 당연히 헷갈리죠. 게다가 업체마다 말이 달라서 뭐가 맞는지 모르겠다고들 하시고요. 그래서 설명은 줄이고 순서만 딱 정리했습니다. 뭘 먼저 정하고, 어떤 서류를 찍어 보내고, 등록 끝나면 뭘 확인하는지. 실제로 진행한 순서 그대로예요. 중간에 이해 안 되는 거 있으면 그냥 전화 주셔도 됩니다."
+     },
+     {
+      "t": "flow",
+      "groups": [
+       [
+        "📷 서류 접수",
+        "🏦 가맹 신청",
+        "✅ 등록 완료"
+       ],
+       [
+        "각 단계 빠르게 진행합니다"
+       ]
+      ]
+     }
+    ]
+   },
+   {
+    "id": "S1-D",
+    "title": "정할 건 두 가지뿐",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "{dong}에서 카드단말기 알아보고 계시면 딱 두 가지만 정하시면 돼요. 계산을 카운터에서 받는지, 자리나 밖에서 받는지. 이것만 정해지면 유선인지 무선인지 나오고, 나머지 카드사 등록이나 초기 설정은 저희가 다 합니다. 기종 비교하고 통신사 고르고 그런 거 사장님이 하실 필요 없어요. 아래에 그 두 가지 어떻게 정하는지, 정하고 나면 뭐가 필요한지 순서대로 적어뒀습니다. 보시다가 막히면 {tel}로 전화 주셔도 되고요."
+     },
+     {
+      "t": "tri",
+      "cells": [
+       {
+        "h": "🖥 유선",
+        "b": "카운터 고정형, 인터넷선"
+       },
+       {
+        "h": "📶 무선",
+        "b": "들고 다니는 형, LTE·와이파이"
+       },
+       {
+        "h": "🤝 둘 다",
+        "b": "카운터 결제랑 자리 결제 둘 다 있는 가게"
+       }
+      ]
+     },
+     {
+      "t": "p",
+      "b": "---"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "S2",
+  "title": "유선 vs 무선 선택",
+  "variants": [
+   {
+    "id": "S2-A",
+    "title": "기준은 결제 자리",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "기준은 하나예요. 손님이 어디서 계산하느냐. 카운터로 와서 계산하면 유선, 자리에서 하거나 밖에서 받으면 무선입니다. 기능은 둘 다 똑같아서 뭐가 더 좋고 나쁘고가 아니라, 어디서 쓰느냐로 정하시면 돼요."
+     },
+     {
+      "t": "compare",
+      "cols": [
+       {
+        "h": "🖥 유선 단말기",
+        "items": [
+         "카운터에 고정",
+         "인터넷선 연결",
+         "승인 빠르고 안 끊김",
+         "충전 신경 안 씀",
+         "계산대가 정해진 가게"
+        ]
+       },
+       {
+        "h": "📶 무선 단말기",
+        "items": [
+         "LTE·와이파이",
+         "전원선 없이 사용",
+         "테이블 결제·배달·출장",
+         "하루 한 번 충전",
+         "자리나 현장에서 받는 가게"
+        ]
+       }
+      ]
+     },
+     {
+      "t": "p",
+      "b": "유선 하나 기본으로 두고 무선을 하나 더 쓰시는 분들도 있어요. 카운터 결제랑 자리 결제가 둘 다 있는 경우죠. 두 대가 필요한지는 상담할 때 자리 배치 들어보고 말씀드릴게요. 처음엔 한 대로 시작하고 나중에 추가하셔도 되고요."
+     }
+    ]
+   },
+   {
+    "id": "S2-B",
+    "title": "성능 차이가 아닙니다",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "유선이랑 무선은 성능이 다른 게 아니라 쓰는 자리가 달라요. 둘 다 IC칩, 마그네틱, 삼성페이, 애플페이, 현금영수증 다 되고 영수증도 나옵니다. 승인 속도도 체감으로는 차이 없어요. 차이는 선이 있냐 없냐, 그것뿐이에요."
+     },
+     {
+      "t": "compare",
+      "cols": [
+       {
+        "h": "🖥 유선",
+        "items": [
+         "한자리에 고정",
+         "인터넷선 연결",
+         "정전 아니면 안 끊김",
+         "배터리 없음",
+         "계산대 정해진 가게"
+        ]
+       },
+       {
+        "h": "📶 무선",
+        "items": [
+         "배터리·LTE",
+         "한 번 충전에 하루 사용",
+         "테이블·현장·배달",
+         "어디든 들고 감",
+         "손님 자리로 가져가는 가게"
+        ]
+       }
+      ]
+     },
+     {
+      "t": "p",
+      "b": "건물 안 매장처럼 인터넷선 끌어오기 어려운 데는 무선이 답이고요. 반대로 지하 매장은 LTE가 약할 수 있어서 유선이 안전해요. 무선을 쓰고 싶은데 지하면 와이파이로 연결하는 방법도 있으니까 매장 위치 알려주시면 어느 쪽이 맞는지 바로 말씀드립니다."
+     }
+    ]
+   },
+   {
+    "id": "S2-C",
+    "title": "질문 넷으로 고르기",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "어느 쪽인지 헷갈리시면 아래 넷만 보세요. 하나라도 해당되는 쪽으로 가시면 돼요."
+     },
+     {
+      "t": "check",
+      "items": [
+       "🧍 손님이 카운터로 와서 계산한다 → 🖥 유선",
+       "🪑 자리에서 계산하거나 배달·출장이 있다 → 📶 무선",
+       "🔌 인터넷선이 없거나 끌어오기 어렵다 → 📶 무선",
+       "🏚 지하라서 신호가 약하다 → 🖥 유선"
+      ]
+     },
+     {
+      "t": "p",
+      "b": "상담해 보면 계산하는 자리만 들어도 거의 바로 정해져요. 유선이랑 무선 둘 다 해당되면 유선 하나 무선 하나 같이 쓰시면 되고요. 인터넷선도 없고 지하라서 신호도 약한 경우가 제일 애매한데, 이럴 땐 와이파이 공유기 하나 두고 무선으로 가는 방법이 있어요. 기능은 똑같으니까 편한 자리 기준으로 고르시면 됩니다."
+     }
+    ]
+   },
+   {
+    "id": "S2-D",
+    "title": "한 줄 요약",
+    "blocks": [
+     {
+      "t": "compare",
+      "cols": [
+       {
+        "h": "🖥 유선 단말기",
+        "items": [
+         "카운터에 두고 씀",
+         "인터넷선 연결",
+         "승인 빠름",
+         "충전 없음",
+         "카운터 결제"
+        ]
+       },
+       {
+        "h": "📶 무선 단말기",
+        "items": [
+         "들고 다니며 씀",
+         "LTE·와이파이",
+         "하루 종일 배터리",
+         "밖에서도 됨",
+         "자리·현장 결제"
+        ]
+       }
+      ]
+     },
+     {
+      "t": "p",
+      "b": "유선 고르시는 이유는 간단해요. 선이 꽂혀 있으니까 신호 걱정 없고 충전도 안 해요. 카운터 자리 딱 정해져 있으면 유선이 제일 편해요. 무선 고르시는 이유도 간단하고요. 손님 자리로 들고 가거나 밖에서 받을 수 있죠. 배달 나가서 현장 결제 받거나 행사장 나가는 분들은 무선 아니면 안 되고요. 어느 쪽인지는 손님 계산하는 장면 떠올려 보시면 바로 나옵니다. 애매하면 {tel}로 가게 형태만 말씀해 주세요."
+     },
+     {
+      "t": "p",
+      "b": "---"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "S3",
+  "title": "쓰던 단말기 바꿀 때",
+  "variants": [
+   {
+    "id": "S3-A",
+    "title": "해지보다 등록이 먼저",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "지금 쓰는 단말기가 있으면 순서가 중요해요. 기존 거 먼저 해지하고 새 거 신청하시면 그 사이에 결제를 못 받아요. 새 단말기 카드사 등록이 끝나고 실제로 결제되는 거 확인한 다음에 기존 걸 해지하시는 게 맞습니다. 며칠 겹치는 건 상관없어요."
+     },
+     {
+      "t": "flow",
+      "groups": [
+       [
+        "🆕 새 단말기 등록",
+        "✅ 결제 확인",
+        "📞 기존 업체 해지",
+        "📦 기존 기기 반납"
+       ]
+      ]
+     },
+     {
+      "t": "p",
+      "b": "기존 계약서 사진으로 보내주시면 위약금 있는지, 해지하려면 어디로 연락해야 하는지, 기기는 반납해야 하는지 같이 봐드려요. 위약금이 남아 있으면 남은 기간이랑 비교해서 지금 바꾸는 게 나은지 기다리는 게 나은지도 말씀드리고요."
+     }
+    ]
+   },
+   {
+    "id": "S3-B",
+    "title": "계약서 먼저 확인",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "바꾸기 전에 지금 계약서에서 세 가지 보세요."
+     },
+     {
+      "t": "check",
+      "items": [
+       "📅 약정 기간 — 언제까지인지, 남은 개월 수",
+       "💸 위약금 — 중도 해지 시 얼마인지",
+       "📦 기기 반납 — 반납해야 하는지, 안 하면 비용 있는지"
+      ]
+     },
+     {
+      "t": "p",
+      "b": "계약서를 못 찾으시면 기존 업체에 전화해서 물어보시면 돼요. 그것도 애매하면 저희가 대신 확인해 드릴 수 있고요. 약정이 얼마 안 남았으면 그때 맞춰서 바꾸는 게 낫고, 많이 남았는데 매달 나가는 돈이 크면 위약금 내고라도 바꾸는 게 나은 경우도 있어요. 숫자 보고 같이 계산해 드릴게요. 바꾸기로 하시면 새 등록 끝나고 결제 확인한 뒤에 기존 거 해지하시면 됩니다."
+     }
+    ]
+   },
+   {
+    "id": "S3-C",
+    "title": "겹치는 기간을 두세요",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "단말기 교체할 때 제일 많이 하시는 실수가 기존 거 먼저 끊는 거예요. 새 거 등록되기 전에 끊으면 그동안 카드를 못 받아요. 반대로 하시면 됩니다. 새 거 먼저 등록하고, 결제 한 번 해보고, 그 다음에 기존 거 끊는 거예요."
+     },
+     {
+      "t": "box",
+      "b": "순서 — 새 단말기 등록 → 실제 결제 확인 → 기존 업체 해지 통보 → 기존 기기 반납"
+     },
+     {
+      "t": "p",
+      "b": "기존 업체 해지할 때는 문자나 이메일로 남기시는 게 좋아요. 나중에 \"해지 요청 받은 적 없다\"고 하는 경우가 있어서요. 반납할 기기는 사진 찍어두시고 보내시고요. 기존 계약 조건 알려주시면 위약금이랑 해지 절차 같이 정리해 드립니다."
+     }
+    ]
+   },
+   {
+    "id": "S3-D",
+    "title": "카드사 등록은 새로",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "단말기를 바꾸면 카드사 가맹 등록도 새로 해요. 기존 등록이 자동으로 넘어오는 게 아니라서요. 그래서 새 단말기 신청하실 때 서류를 다시 내시는 거고, 저희가 카드사에 새로 접수합니다. 이 등록이 끝나야 새 단말기로 결제가 되니까, 등록 끝나는 걸 확인하고 기존 걸 해지하시면 돼요."
+     },
+     {
+      "t": "flow",
+      "groups": [
+       [
+        "📷 서류 전송",
+        "🏦 새 가맹 등록",
+        "💳 새 단말기로 결제 확인",
+        "❌ 기존 해지"
+       ]
+      ]
+     },
+     {
+      "t": "p",
+      "b": "기존 업체 위약금은 계약서 보고 판단해야 돼요. 계약서 사진 보내주시면 남은 기간이랑 위약금 보고 지금 바꾸는 게 맞는지 말씀드릴게요. 급하지 않으면 약정 끝나는 시점에 맞춰서 미리 준비해 두는 것도 방법이에요."
+     },
+     {
+      "t": "p",
+      "b": "---"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "S4",
+  "title": "결제 수단",
+  "variants": [
+   {
+    "id": "S4-A",
+    "title": "간편결제까지 한 대로",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "신용·체크카드는 당연하고, 요즘 손님들 많이 쓰는 간편결제까지 한 대로 다 받아요. 따로 신청하거나 추가 요금 내는 거 없이 처음부터 다 열려 있어요."
+     },
+     {
+      "t": "chips",
+      "items": [
+       "💳 신용",
+       "체크카드",
+       "📱 삼성페이",
+       "🍎 애플페이",
+       "💛 카카오페이",
+       "💚 네이버페이",
+       "🔵 제로페이",
+       "🧾 현금영수증"
+      ]
+     },
+     {
+      "t": "p",
+      "b": "젊은 손님 많은 동네는 간편결제 비중이 꽤 높아요. 지갑 안 들고 다니고 폰만 들고 오는 손님이 반 이상인 데도 있고요. 단말기 하나로 다 되니까 \"이거 안 되나요?\" 소리 들을 일 없습니다. 카드 긁는 거, 칩 꽂는 거, 폰 대는 거 전부 같은 기기에서 처리돼요."
+     }
+    ]
+   },
+   {
+    "id": "S4-B",
+    "title": "따로 둘 필요 없어요",
+    "blocks": [
+     {
+      "t": "chips",
+      "items": [
+       "신용카드",
+       "체크카드",
+       "삼성페이",
+       "애플페이",
+       "카카오페이",
+       "네이버페이",
+       "페이코",
+       "현금영수증"
+      ]
+     },
+     {
+      "t": "p",
+      "b": "결제 방식마다 기기를 따로 둘 필요 없어요. 카드 긁는 거, 칩 꽂는 거, 폰 대는 거 전부 한 대에서 돼요. 현금영수증도 같은 기기에서 나오고요. 사장님들이 제일 많이 물어보시는 애플페이도 기본으로 됩니다. 손님이 뭘로 내든 사장님은 금액만 누르시면 돼요. 손님이 \"이거 되나요?\" 하면 \"네, 대세요\" 하시면 끝이에요. 결제 방식별로 수수료 다르고 그런 것도 없으니까 신경 안 쓰셔도 됩니다."
+     }
+    ]
+   },
+   {
+    "id": "S4-C",
+    "title": "긁고 꽂고 대고",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "단말기에서 되는 결제 방식 다 적어보면 이래요. 카드 긁는 마그네틱, 꽂는 IC칩, 대는 NFC. 삼성페이·애플페이·카카오페이·네이버페이 같은 간편결제는 NFC나 바코드로 처리되고요. 현금 손님한테는 현금영수증 끊어드리면 됩니다. 손님이 카드를 어떻게 내든 단말기가 알아서 인식하니까 사장님이 방식 골라주실 필요 없어요."
+     },
+     {
+      "t": "chips",
+      "items": [
+       "💳 카드",
+       "📱 삼성",
+       "애플페이",
+       "💛 카카오",
+       "💚 네이버",
+       "🧾 현금영수증"
+      ]
+     },
+     {
+      "t": "p",
+      "b": "\"이거 되나요?\" 소리 안 나오게 처음부터 전부 열어드려요. 나중에 새로 나오는 결제 방식 있으면 그것도 업데이트로 추가되고요."
+     }
+    ]
+   },
+   {
+    "id": "S4-D",
+    "title": "폰만 대면 끝",
+    "blocks": [
+     {
+      "t": "chips",
+      "items": [
+       "💳 신용",
+       "체크",
+       "📱 삼성페이",
+       "🍎 애플페이",
+       "💛 카카오페이",
+       "💚 네이버페이",
+       "🔵 제로페이",
+       "🟦 토스페이",
+       "🧾 현금영수증"
+      ]
+     },
+     {
+      "t": "p",
+      "b": "간편결제는 손님이 폰 갖다 대면 끝이에요. 사장님이 앱 깔거나 QR 띄우거나 그런 거 없어요. 손님들이 뭘 주로 쓰든 단말기 한 대로 다 받히고, 결제 내역은 한 화면에서 보시면 됩니다. 현금 손님도 같은 기기에서 현금영수증 끊어드리면 되고요. 손님 전화번호 입력하거나 현금영수증 카드 대면 바로 발행돼요. 매출 내역이 카드든 간편결제든 현금영수증이든 한군데 모이니까 나중에 정리하기도 편해요."
+     },
+     {
+      "t": "p",
+      "b": "---"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "S5",
+  "title": "준비 서류",
+  "variants": [
+   {
+    "id": "S5-A",
+    "title": "사진 네 장",
+    "blocks": [
+     {
+      "t": "table",
+      "rows": [
+       [
+        "📄 사업자등록증",
+        "사진으로 전송. 신규면 발급 후 신청"
+       ],
+       [
+        "🪪 대표자 신분증",
+        "앞면 사진"
+       ],
+       [
+        "🏦 사업자 통장 사본",
+        "카드 매출 들어올 계좌"
+       ],
+       [
+        "📷 매장 사진",
+        "간판·내부 각 1장 (카드사 심사용)"
+       ]
+      ]
+     },
+     {
+      "t": "warn",
+      "b": "통장은 대표자 명의나 사업자 명의여야 돼요. 가족 명의 통장은 등록이 안 됩니다."
+     },
+     {
+      "t": "p",
+      "b": "이 네 개 사진 찍어서 문자로 보내주시면 접수 끝이에요. 원본 가져오시거나 우편으로 보내실 필요 없어요. 간판이 없으면 출입구 사진으로 대신해도 되고, 아직 오픈 전이면 내부 공사 중인 사진도 괜찮아요. 카드사에서 진짜 매장인지 확인하는 용도라 화질만 알아볼 정도면 됩니다."
+     }
+    ]
+   },
+   {
+    "id": "S5-B",
+    "title": "팩스 없이 사진으로",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "서류는 네 가지고 전부 사진으로 돼요. 원본 우편으로 보내거나 팩스 쓰거나 그런 거 없습니다. 폰으로 찍어서 문자로 보내주시면 끝이에요."
+     },
+     {
+      "t": "check",
+      "items": [
+       "📄 사업자등록증 (발급 후 신청 가능)",
+       "🪪 대표자 신분증 앞면",
+       "🏦 매출 입금 통장 사본 (대표자 또는 사업자 명의)",
+       "📷 매장 간판·내부 사진 각 1장"
+      ]
+     },
+     {
+      "t": "warn",
+      "b": "통장 명의가 대표자랑 다르면 카드사 심사에서 돌아와요. 여기서 하루 이틀 늦어지는 경우가 제일 많습니다."
+     },
+     {
+      "t": "p",
+      "b": "새로 여시는 분은 사업자등록증 나온 날 바로 보내주시면 그만큼 빨리 진행돼요. 등록증 나오기 전에 미리 상담해 두시면 나오자마자 접수할 수 있고요. 통장 사본은 은행 앱에서 캡처하신 것도 되니까 굳이 은행 가실 필요 없어요."
+     }
+    ]
+   },
+   {
+    "id": "S5-C",
+    "title": "대신 접수해 드립니다",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "카드사 가맹 등록 서류를 사장님이 직접 챙기실 필요는 없어요. 카드사마다 양식이 다르고 써야 할 게 많은데, 그건 저희가 합니다. 아래 네 가지만 사진으로 보내주시면 돼요."
+     },
+     {
+      "t": "table",
+      "rows": [
+       [
+        "서류",
+        "비고"
+       ],
+       [
+        "📄 사업자등록증",
+        "신규는 발급되면 바로"
+       ],
+       [
+        "🪪 대표자 신분증",
+        "주민등록증이나 운전면허증"
+       ],
+       [
+        "🏦 사업자 통장 사본",
+        "카드 매출 입금용"
+       ],
+       [
+        "📷 매장 사진",
+        "간판 1장, 내부 1장"
+       ]
+      ]
+     },
+     {
+      "t": "warn",
+      "b": "통장은 꼭 대표자 명의나 사업자 명의로요. 가족이나 직원 명의는 안 됩니다."
+     },
+     {
+      "t": "p",
+      "b": "매장 사진은 카드사에서 진짜 영업하는지 보는 용도라, 아직 공사 중이면 끝나고 보내주셔도 돼요. 나머지 세 개 먼저 보내주시면 그거부터 접수해 두고 사진은 나중에 받아도 됩니다."
+     }
+    ]
+   },
+   {
+    "id": "S5-D",
+    "title": "등록증이 아직 없다면",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "준비물은 사진 네 장이에요. 폰으로 찍어서 문자로 보내주시면 됩니다."
+     },
+     {
+      "t": "flow",
+      "groups": [
+       [
+        "📄 사업자등록증",
+        "🪪 신분증 앞면",
+        "🏦 통장 사본",
+        "📷 매장 사진",
+        "📱 문자로 전송"
+       ]
+      ]
+     },
+     {
+      "t": "box",
+      "h": "사업자등록증이 아직 없으면",
+      "b": "언제 나오는지만 알려주세요. 미리 상담해 두면 나오자마자 접수됩니다."
+     },
+     {
+      "t": "warn",
+      "h": "통장 명의",
+      "b": "대표자 본인이나 사업자 명의만 돼요. 배우자·부모 명의로 넣으시면 심사에서 돌아옵니다."
+     },
+     {
+      "t": "p",
+      "b": "매장 사진이 애매하면 (간판이 없거나 공용 건물이거나) 출입구랑 안에 계산하는 데 사진으로 대신하면 돼요. 어떤 사진이 되는지는 보내주시면 바로 봐드릴게요. 사진 상태 안 좋아서 다시 찍어야 하는 경우도 있으니까, 문자 보내시고 바로 확인해 드린다고 생각하시면 됩니다."
+     },
+     {
+      "t": "p",
+      "b": "---"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "S6",
+  "title": "가맹 등록이란",
+  "variants": [
+   {
+    "id": "S6-A",
+    "title": "카드사 심사 과정",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "가맹 등록은 \"이 가게에서 카드 받아도 된다\"고 카드사가 허가해 주는 거예요. 카드사마다 따로 등록해야 하고, 사업자등록증·신분증·통장·매장 사진으로 심사합니다. 이 등록이 끝나야 단말기로 결제가 돼요."
+     },
+     {
+      "t": "flow",
+      "groups": [
+       [
+        "📷 서류 접수",
+        "🏦 카드사별 심사",
+        "✅ 가맹번호 발급",
+        "💳 단말기 연결"
+       ]
+      ]
+     },
+     {
+      "t": "p",
+      "b": "심사에서 보는 건 실제로 영업하는 가게인지, 통장 명의가 맞는지, 업종이 카드 받을 수 있는 업종인지예요. 대부분 문제없이 통과하고, 돌아오는 경우는 거의 통장 명의 때문이에요. 카드사 여러 곳에 각각 접수해야 해서 사장님이 직접 하시면 번거로운데, 그건 저희가 다 합니다."
+     }
+    ]
+   },
+   {
+    "id": "S6-B",
+    "title": "왜 서류가 필요한지",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "서류 네 가지를 받는 이유가 가맹 등록 때문이에요. 카드사가 이 가게에서 결제 받아도 되는지 확인하는 과정이라 사업자등록증으로 사업자 확인하고, 신분증으로 대표자 확인하고, 통장으로 입금 계좌 확인하고, 매장 사진으로 실제 영업 확인해요."
+     },
+     {
+      "t": "table",
+      "rows": [
+       [
+        "📄 사업자등록증",
+        "사업자 확인"
+       ],
+       [
+        "🪪 신분증",
+        "대표자 본인 확인"
+       ],
+       [
+        "🏦 통장 사본",
+        "매출 입금 계좌 확인"
+       ],
+       [
+        "📷 매장 사진",
+        "실제 영업 확인"
+       ]
+      ]
+     },
+     {
+      "t": "p",
+      "b": "심사 끝나면 카드사마다 가맹번호가 나오고, 그걸 단말기에 넣으면 결제가 되는 구조예요. 카드사가 여러 곳이라 각각 접수하는데 사장님은 서류 한 번만 보내주시면 됩니다. 나머지 카드사별 양식 작성이랑 접수는 저희가 해요."
+     }
+    ]
+   },
+   {
+    "id": "S6-C",
+    "title": "등록이 끝나야 결제됩니다",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "단말기만 있다고 결제가 되는 게 아니에요. 카드사에 가맹 등록이 돼 있어야 승인이 나요. 그래서 신청 순서가 서류 → 등록 → 결제인 거고, 등록 끝나기 전에는 단말기가 있어도 승인이 안 납니다."
+     },
+     {
+      "t": "box",
+      "b": "가맹 등록 = 카드사가 이 가게에 카드 결제를 허가하는 것. 카드사별로 각각 등록."
+     },
+     {
+      "t": "p",
+      "b": "등록에서 걸리는 경우는 대부분 통장 명의예요. 대표자나 사업자 명의가 아니면 돌아와요. 그다음이 매장 사진인데, 간판이나 내부가 안 보이면 다시 요청 와요. 이 두 개만 처음에 잘 보내주시면 거의 한 번에 끝납니다. 진행 상황은 중간중간 문자로 알려드려요."
+     }
+    ]
+   },
+   {
+    "id": "S6-D",
+    "title": "카드사마다 따로",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "카드사가 한 곳이 아니라 여러 곳이잖아요. KB, 신한, 삼성, 현대, 롯데, 비씨 등등. 가맹 등록은 이 카드사 각각에 해요. 그래서 시간이 좀 걸리고, 사장님이 직접 하시면 카드사마다 양식 다르고 연락처 다르고 해서 하루 종일 걸려요."
+     },
+     {
+      "t": "check",
+      "items": [
+       "🏦 카드사별로 각각 등록",
+       "📄 서류는 한 번만 보내면 됨",
+       "✍️ 카드사별 양식 작성은 저희가",
+       "📱 진행 상황은 문자로 안내"
+      ]
+     },
+     {
+      "t": "p",
+      "b": "저희가 대신 접수하는 게 그래서예요. 서류 한 번 받아서 카드사 전부에 접수하고, 심사 돌아오는 거 있으면 저희가 먼저 보고 사장님한테는 필요한 것만 말씀드려요. 등록 다 끝나면 단말기에 가맹번호 넣고 결제 시작입니다."
+     },
+     {
+      "t": "p",
+      "b": "---"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "S7",
+  "title": "비용 원칙",
+  "variants": [
+   {
+    "id": "S7-A",
+    "title": "세 가지 없음",
+    "blocks": [
+     {
+      "t": "check",
+      "items": [
+       "💸 관리비 없음 — 매달 나가는 돈 없어요",
+       "🚚 설치비 없음 — 따로 내는 돈 없어요",
+       "🏦 가맹비 없음 — 카드사 등록은 저희가 대신 해요"
+      ]
+     },
+     {
+      "t": "p",
+      "b": "다른 데 비교하실 때 이 세 개 먼저 물어보세요. 매달 얼마씩 빠져나가는 계약이 아직 꽤 있거든요. 처음엔 얼마 안 되는 것 같아도 몇 년 쌓이면 꽤 커져요. 단말기 조건은 업종이랑 매출 규모 보고 정해지니까 상담할 때 정확히 말씀드릴게요. 전화로 물어보시는 게 제일 빨라요."
+     }
+    ]
+   },
+   {
+    "id": "S7-B",
+    "title": "매달 나가는 돈부터",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "비용에서 제일 먼저 보셔야 할 건 매달 나가는 돈이 있냐 없냐예요. 관리비, 설치비, 가맹비 이 세 개는 없습니다. 아직도 이 세 개 매달 빠져나가는 계약이 많아서 일부러 강조해서 말씀드려요. 계약서 받으시면 '월'이라고 붙은 항목이 있는지 꼭 보세요."
+     },
+     {
+      "t": "tri",
+      "cells": [
+       {
+        "h": "💸 관리비",
+        "b": "0원"
+       },
+       {
+        "h": "🚚 설치비",
+        "b": "0원"
+       },
+       {
+        "h": "🏦 가맹비",
+        "b": "0원"
+       }
+      ]
+     },
+     {
+      "t": "p",
+      "b": "단말기 조건은 업종이랑 매출 보고 달라지니까 상담할 때 가게 상황 듣고 정확하게 말씀드릴게요. 전화 주시면 숨기는 거 없이 그대로 얘기해 드립니다. 나중에 조건이 바뀌거나 추가되는 거 없이 처음 말씀드린 그대로 가요."
+     }
+    ]
+   },
+   {
+    "id": "S7-C",
+    "title": "계약서에서 볼 세 줄",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "계약서에서 볼 건 세 줄이에요. 이것만 확인하시면 나중에 \"이런 게 있었어?\" 할 일 없어요."
+     },
+     {
+      "t": "table",
+      "rows": [
+       [
+        "항목",
+        "안내"
+       ],
+       [
+        "💸 매달 관리비",
+        "❌ 없음"
+       ],
+       [
+        "🚚 설치비",
+        "❌ 없음"
+       ],
+       [
+        "🏦 카드사 가맹비",
+        "❌ 없음 (등록 대행)"
+       ]
+      ]
+     },
+     {
+      "t": "p",
+      "b": "다른 데랑 비교하실 때 이 세 개 먼저 물어보세요. 어떤 데는 관리비 대신 다른 이름으로 매달 받기도 하니까 '월'이라고 붙은 건 다 물어보시고요. 단말기 조건은 업종마다 달라서 상담할 때 정확한 숫자로 말씀드릴게요. 문자로 조건 정리해서 보내드리니까 나중에 다시 보셔도 되고요."
+     }
+    ]
+   },
+   {
+    "id": "S7-D",
+    "title": "비용은 셋으로 나뉩니다",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "카드단말기 비용은 세 가지예요. 매달 내는 관리비, 처음 놓을 때 내는 설치비, 카드사 등록할 때 내는 가맹비. 여기는 셋 다 없어요. 이 세 개가 없으면 매달 고정으로 나가는 돈이 없다는 뜻이에요."
+     },
+     {
+      "t": "tri",
+      "cells": [
+       {
+        "h": "💸 관리비",
+        "b": "없음"
+       },
+       {
+        "h": "🚚 설치비",
+        "b": "없음"
+       },
+       {
+        "h": "🏦 가맹비",
+        "b": "없음"
+       }
+      ]
+     },
+     {
+      "t": "p",
+      "b": "남는 건 단말기 자체 조건인데, 이건 업종이랑 매출 규모 따라 달라서 여기 일괄로 안 적었어요. 같은 조건을 모든 가게에 똑같이 적용하는 게 아니라 가게마다 맞춰서 정하는 거라서요. 전화 주시면 가게에 맞는 조건으로 바로 말씀드릴게요. 말씀드린 조건은 문자로 정리해서 보내드립니다."
+     },
+     {
+      "t": "p",
+      "b": "---"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "S8",
+  "title": "정산·입금",
+  "variants": [
+   {
+    "id": "S8-A",
+    "title": "중간에 거치는 곳 없음",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "카드 매출은 카드사에서 사장님 통장으로 바로 들어와요. 중간에 거치는 데 없습니다. 저희가 돈을 받았다가 넘겨드리는 게 아니라 카드사가 직접 넣어요."
+     },
+     {
+      "t": "flow",
+      "groups": [
+       [
+        "💳 손님 결제",
+        "🏦 카드사 승인",
+        "📅 카드사별 정산일",
+        "💰 사장님 통장 입금"
+       ]
+      ]
+     },
+     {
+      "t": "table",
+      "rows": [
+       [
+        "📅 입금 시점",
+        "카드사별 정산 일정대로 (주말·공휴일 제외)"
+       ],
+       [
+        "🏦 입금 주체",
+        "카드사가 직접 입금"
+       ],
+       [
+        "🧩 입금 단위",
+        "카드사별로 따로"
+       ]
+      ]
+     },
+     {
+      "t": "p",
+      "b": "카드사마다 일정이 조금씩 달라서 정확한 입금일은 가맹 등록 끝나면 알려드려요. 통장에 카드사별로 따로 들어오니까 통장 내역에서 카드사 이름으로 보시면 됩니다. 하루 매출이 한 번에 딱 들어오는 게 아니라 KB, 신한, 삼성 이렇게 나눠서 들어오는 거예요."
+     }
+    ]
+   },
+   {
+    "id": "S8-B",
+    "title": "카드사별로 따로 입금",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "입금은 카드사별 정산 일정에 맞춰서 각각 들어와요. 주말이랑 공휴일은 빠지고, 카드사마다 일정이 조금씩 다릅니다. 정확한 입금일은 가맹 등록 끝나면 말씀드릴게요."
+     },
+     {
+      "t": "box",
+      "h": "정산 확인",
+      "b": "통장에 카드사 이름으로 찍혀요. 단말기 화면이나 관리 페이지에서 일별 매출 보시고 통장이랑 맞춰보시면 됩니다."
+     },
+     {
+      "t": "p",
+      "b": "처음에 헷갈려하시는 게 카드사마다 따로 들어온다는 거예요. 한 번에 합쳐서 오는 게 아니라 KB, 신한, 삼성 이렇게 나눠서 오니까, 하루 총액으로 비교하시면 맞아요. 관리 페이지에서 카드사별로도 볼 수 있으니까 통장이랑 하나씩 맞춰보셔도 되고요. 처음 한두 주만 맞춰보시면 그 뒤론 패턴이 보여서 안 헷갈려요."
+     }
+    ]
+   },
+   {
+    "id": "S8-C",
+    "title": "정산이 안 맞을 때",
+    "blocks": [
+     {
+      "t": "check",
+      "items": [
+       "📅 입금 시점 — 카드사별 정산 일정 (등록 후 안내)",
+       "🏦 입금 계좌 — 신청할 때 낸 사업자 통장",
+       "🧩 입금 단위 — 카드사별로 따로",
+       "🔍 확인 방법 — 단말기 일별 매출 ↔ 통장 내역 맞춰보기"
+      ]
+     },
+     {
+      "t": "p",
+      "b": "정산이 안 맞는다 하시는 거 대부분은 주말 결제분이 다음 주에 몰려서 들어오는 경우예요. 요일별로 보지 마시고 결제일 기준으로 맞춰보시면 맞습니다. 취소 건이 있으면 그것도 빠져서 들어오니까 취소 내역도 같이 보시고요. 그래도 차이 나면 {tel}로 주시면 카드사 입금 내역 같이 봐드릴게요. 어느 카드사 어느 날짜 건이 빠졌는지까지 찾아드립니다."
+     }
+    ]
+   },
+   {
+    "id": "S8-D",
+    "title": "입금 흐름은 단순합니다",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "카드 매출이 통장에 들어오는 흐름은 단순해요. 손님이 결제하면 카드사가 승인하고, 카드사별 정산 일정대로 사장님 통장에 넣어요. 저희는 그 사이에 돈 안 만집니다. 그래서 저희한테 무슨 일이 생겨도 사장님 매출은 그대로 들어와요."
+     },
+     {
+      "t": "flow",
+      "groups": [
+       [
+        "💳 결제",
+        "🏦 카드사 승인",
+        "📅 카드사별 정산일",
+        "💰 통장 입금"
+       ]
+      ]
+     },
+     {
+      "t": "p",
+      "b": "통장 보시면 카드사 이름으로 여러 건 들어와요. 하루 매출을 카드사별로 쪼갠 거니까 합치면 단말기 일별 매출이랑 같아요. 세금계산서나 현금영수증 발행 내역도 관리 페이지에서 같이 보실 수 있고요. 부가세 신고 때 매출 자료 뽑기도 편해요. 세무사한테 넘기실 때 관리 페이지에서 기간 정해서 뽑아 보내시면 됩니다."
+     },
+     {
+      "t": "p",
+      "b": "---"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "S9",
+  "title": "매출 관리·세금계산서·현금영수증",
+  "variants": [
+   {
+    "id": "S9-A",
+    "title": "한 화면에서 다 봅니다",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "카드, 간편결제, 현금영수증 매출이 관리 페이지 한 곳에 모여요. 일별·월별로 볼 수 있고 카드사별로도 나눠서 봐요. 부가세 신고 때 기간 정해서 뽑으면 그대로 세무사한테 넘기시면 되고요."
+     },
+     {
+      "t": "check",
+      "items": [
+       "📊 일별·월별 매출 — 카드사별 구분",
+       "🧾 현금영수증 발행 내역",
+       "📄 세금계산서 발행 내역",
+       "📥 기간 지정해서 엑셀로 다운"
+      ]
+     },
+     {
+      "t": "p",
+      "b": "현금영수증은 손님이 요청하면 발행해야 하고, 업종에 따라 요청 없어도 일정 금액 이상이면 의무로 끊어야 하는 경우가 있어요. 의무발행 업종인지는 상담할 때 확인해 드릴게요. 안 끊으면 나중에 가산세 나오니까 처음에 알아두시는 게 좋아요."
+     }
+    ]
+   },
+   {
+    "id": "S9-B",
+    "title": "현금영수증 의무발행",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "현금영수증은 두 가지예요. 손님이 달라고 하면 무조건 끊어야 하는 거, 그리고 업종에 따라 손님이 말 안 해도 10만 원 이상이면 끊어야 하는 의무발행. 의무발행 업종이면 손님이 번호 안 주셔도 국세청 지정번호로 끊어야 돼요."
+     },
+     {
+      "t": "box",
+      "h": "의무발행 업종 여부는 사업자등록증 업종 코드로 확인",
+      "b": "상담할 때 같이 봐드려요."
+     },
+     {
+      "t": "p",
+      "b": "단말기에서 현금영수증 끊는 건 간단해요. 현금 결제 누르고 손님 전화번호 입력하면 끝. 발행 내역은 관리 페이지에 다 남아서 나중에 누락된 거 있는지 확인할 수 있어요. 세금계산서는 사업자 손님한테 발행하는 건데, 이것도 관리 페이지에서 처리하고 내역 남길 수 있습니다."
+     }
+    ]
+   },
+   {
+    "id": "S9-C",
+    "title": "부가세 신고 준비",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "부가세 신고 때 제일 귀찮은 게 매출 자료 모으는 거잖아요. 카드사별로 따로 뽑고 현금영수증 따로 뽑고. 관리 페이지에서는 기간만 정하면 카드·간편결제·현금영수증 다 합쳐서 한 번에 나와요. 그거 세무사한테 보내시면 끝이에요."
+     },
+     {
+      "t": "flow",
+      "groups": [
+       [
+        "📅 기간 선택",
+        "📊 매출 합계 확인",
+        "📥 다운로드",
+        "📧 세무사 전달"
+       ]
+      ]
+     },
+     {
+      "t": "p",
+      "b": "현금영수증은 손님 요청 시 발행이 기본이고, 업종에 따라 의무발행 대상이면 요청 없어도 끊어야 해요. 의무발행인데 안 끊으면 가산세라서, 상담할 때 사장님 업종이 해당되는지 확인해 드릴게요. 해당되면 단말기에 자동으로 안내 뜨게 설정할 수도 있어요."
+     }
+    ]
+   },
+   {
+    "id": "S9-D",
+    "title": "매출 확인·현금영수증·세금계산서",
+    "blocks": [
+     {
+      "t": "table",
+      "rows": [
+       [
+        "📊 매출 확인",
+        "관리 페이지, 일별·월별·카드사별"
+       ],
+       [
+        "🧾 현금영수증",
+        "단말기에서 바로 발행, 손님 번호 입력"
+       ],
+       [
+        "📄 세금계산서",
+        "사업자 손님, 관리 페이지에서 발행"
+       ],
+       [
+        "📥 신고 자료",
+        "기간 정해서 다운로드"
+       ]
+      ]
+     },
+     {
+      "t": "p",
+      "b": "현금영수증은 손님이 요청하면 무조건 끊어야 하고, 의무발행 업종은 손님 요청 없어도 일정 금액 넘으면 끊어야 돼요. 어떤 업종이 해당되는지는 국세청에서 정해놓은 거라 상담할 때 사장님 업종 보고 알려드릴게요. 세금계산서는 사업자 손님이 달라고 할 때 발행하는 건데, 관리 페이지에서 처리하면 내역이 같이 남아서 신고 때 따로 정리 안 하셔도 됩니다."
+     },
+     {
+      "t": "p",
+      "b": "---"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "S10",
+  "title": "사용 중 문제 대응",
+  "variants": [
+   {
+    "id": "S10-A",
+    "title": "증상별 조치표",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "쓰다가 생기는 문제 대부분은 전화로 5분 안에 끝나요. 아래 표에 있는 거 먼저 해보시고 안 되면 전화 주세요."
+     },
+     {
+      "t": "table",
+      "rows": [
+       [
+        "🚫 승인 안 됨",
+        "통신 끊김",
+        "🔄 선·신호 확인하고 재시작"
+       ],
+       [
+        "🧾 영수증 안 나옴",
+        "용지 방향",
+        "🔁 용지 뒤집어서 다시"
+       ],
+       [
+        "🖥 화면 멈춤",
+        "일시 오류",
+        "🔌 전원 껐다 켜기"
+       ],
+       [
+        "💳 카드 인식 안 됨",
+        "칩 접촉 불량",
+        "🧽 카드 닦고 다시"
+       ],
+       [
+        "📡 무선 신호 없음",
+        "위치 문제",
+        "🪟 창가로 옮겨서 확인"
+       ]
+      ]
+     },
+     {
+      "t": "p",
+      "b": "이걸로 안 되면 {tel}로 전화 주세요. 전화로 원인 보고 해결 안 되면 기기 고장으로 보고 점검하고 교체해 드려요. 신청할 때 통화한 담당자가 그 뒤 문의도 같은 번호로 받으니까 상황 설명 처음부터 다시 하실 필요 없어요."
+     }
+    ]
+   },
+   {
+    "id": "S10-B",
+    "title": "재시작이면 대부분 해결",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "제일 흔한 게 세 가지예요. 승인이 안 되거나, 영수증이 안 나오거나, 화면이 멈추거나. 셋 다 거의 전원 껐다 켜면 돼요. 손님 앞에서 당황하지 마시고 \"잠시만요\" 하고 껐다 켜보세요."
+     },
+     {
+      "t": "check",
+      "items": [
+       "🚫 승인 안 됨 → 📡 신호 확인 → 🔄 재시작",
+       "🧾 영수증 안 나옴 → 🔁 용지 앞뒤 확인 → 다시 끼우기",
+       "🖥 화면 멈춤 → 🔌 전원 10초 끄고 다시 켜기",
+       "💳 특정 카드만 안 됨 → 🧽 카드 닦기 → 다른 카드로 확인"
+      ]
+     },
+     {
+      "t": "p",
+      "b": "그래도 안 되면 기기 문제일 수 있어요. 그럴 땐 점검하고 교체해 드리고, 그 사이에 결제 못 받는 일 없게 해드립니다. 연락은 {tel}, 담당자 안 바뀌어요. 영업 중에 급한 거면 전화 바로 받고, 밤늦게면 문자 남겨주시면 아침에 바로 연락드려요."
+     }
+    ]
+   },
+   {
+    "id": "S10-C",
+    "title": "문제 생기면 이 순서로",
+    "blocks": [
+     {
+      "t": "flow",
+      "groups": [
+       [
+        "🔌 전원 재시작",
+        "📡 통신 확인",
+        "📞 그래도 안 되면 {tel}"
+       ]
+      ]
+     },
+     {
+      "t": "p",
+      "b": "단말기가 고장 잘 나는 물건은 아니에요. 문제 대부분은 통신이 잠깐 끊겼거나 용지가 걸린 거고, 재시작이나 용지 갈면 끝나요. 무선은 배터리 방전인 경우도 있으니까 충전부터 확인해 보시고요. 기기 자체가 고장 나면 점검하고 교체해 드려서 결제 못 받는 시간 없게 해드립니다. 신청할 때 통화한 담당자가 그대로 받으니까 \"누구한테 말해야 되지\" 고민 안 하셔도 돼요. 문의 내역도 다 남아 있어서 지난번에 뭐가 문제였는지 다시 설명 안 하셔도 되고요."
+     }
+    ]
+   },
+   {
+    "id": "S10-D",
+    "title": "연락 주시는 다섯 가지",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "사용 중에 연락 주시는 거 정리하면 이래요. 승인 오류, 영수증 안 나옴, 화면 멈춤, 카드 인식 안 됨, 용지 어디서 사냐. 앞에 네 개는 전화로 해결되고, 용지는 저희한테 문의 주시거나 인터넷에서 같은 규격으로 사시면 돼요."
+     },
+     {
+      "t": "table",
+      "rows": [
+       [
+        "🚫 승인 오류",
+        "🔄 통신 확인하고 재시작"
+       ],
+       [
+        "🧾 영수증 불량",
+        "🔁 용지 방향 다시"
+       ],
+       [
+        "🖥 화면 멈춤",
+        "🔌 전원 재시작"
+       ],
+       [
+        "💳 인식 불량",
+        "🧽 카드 닦기, 다른 카드로 시도"
+       ],
+       [
+        "📄 용지 부족",
+        "📞 문의 또는 인터넷 구매"
+       ]
+      ]
+     },
+     {
+      "t": "p",
+      "b": "기기 고장이다 싶으면 바로 교체해 드려요. 문의는 {tel}, 신청할 때 담당자가 계속 받습니다. 매장 옮기거나 상호 바뀌거나 통장 바꾸는 것도 같은 번호로 말씀해 주시면 처리해 드리고요."
+     },
+     {
+      "t": "p",
+      "b": "---"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "S11",
+  "title": "지역 FAQ",
+  "variants": [
+   {
+    "id": "S11-A",
+    "title": "신청·통신·해지·배달",
+    "blocks": [
+     {
+      "t": "faq",
+      "q": "신청하면 얼마나 걸려요?",
+      "a": "서류 들어오는 대로 가맹 접수하고 등록까지 빠르게 진행해요. 정확한 일정은 접수할 때 알려드릴게요."
+     },
+     {
+      "t": "faq",
+      "q": "{dong} 매장에 인터넷선이 없어요.",
+      "a": "와이파이나 LTE로 되는 무선 단말기 쓰시면 돼요. 지하거나 신호 약한 자리면 상담할 때 미리 말씀해 주세요. 와이파이 공유기 하나 두는 방법도 있어요."
+     },
+     {
+      "t": "faq",
+      "q": "지금 쓰는 단말기 해지는 어떻게 해요?",
+      "a": "기존 계약 조건 알려주시면 위약금 있는지랑 해지 순서 같이 정리해 드릴게요. 해지 전에 새 거 먼저 등록해서 결제 못 받는 날 없게 하는 게 좋아요."
+     },
+     {
+      "t": "faq",
+      "q": "배달앱 주문도 이걸로 결제돼요?",
+      "a": "앱에서 이미 결제된 건 따로 할 거 없고요, 현장 결제 주문은 무선 단말기로 받으시면 돼요."
+     }
+    ]
+   },
+   {
+    "id": "S11-B",
+    "title": "등록증·두 대·용지·입금",
+    "blocks": [
+     {
+      "t": "faq",
+      "q": "사업자등록증이 아직 안 나왔는데 신청돼요?",
+      "a": "등록증이 나온 뒤에 신청할 수 있어요. 나오는 날짜 알려주시면 미리 상담해 두고 나오자마자 바로 접수해 드릴게요."
+     },
+     {
+      "t": "faq",
+      "q": "유선이랑 무선 둘 다 쓸 수 있어요?",
+      "a": "네, 가능해요. {dong}에도 카운터에는 유선, 테이블에는 무선, 이렇게 두 대 쓰시는 사장님들 계세요. 처음엔 한 대로 시작하고 나중에 추가하셔도 되고요."
+     },
+     {
+      "t": "faq",
+      "q": "영수증 용지는 어디서 사요?",
+      "a": "저희한테 문의 주시면 돼요. 급하시면 인터넷에서 같은 규격으로 사셔도 되고요."
+     },
+     {
+      "t": "faq",
+      "q": "카드 매출은 언제 들어와요?",
+      "a": "카드사별 정산 일정대로 사업자 통장에 들어와요. 정확한 날짜는 등록 끝나면 알려드릴게요."
+     }
+    ]
+   },
+   {
+    "id": "S11-C",
+    "title": "배터리·애플페이·설치·고장",
+    "blocks": [
+     {
+      "t": "faq",
+      "q": "무선 단말기 배터리 얼마나 가요?",
+      "a": "완충하면 하루 영업은 충분해요. 밤에 충전해 두시면 됩니다. 장시간 밖에서 쓰시면 보조배터리 하나 들고 다니셔도 되고요."
+     },
+     {
+      "t": "faq",
+      "q": "애플페이 돼요?",
+      "a": "네, 됩니다. 삼성페이, 카카오페이, 네이버페이도 기본으로 돼요."
+     },
+     {
+      "t": "faq",
+      "q": "{gugun}이면 설치는 어떻게 되나요?",
+      "a": "등록 끝나면 바로 쓰실 수 있게 세팅까지 같이 봐드려요. 자세한 건 상담할 때 말씀드릴게요."
+     },
+     {
+      "t": "faq",
+      "q": "고장 나면 얼마나 걸려요?",
+      "a": "전화로 원인 먼저 보고, 기기 문제면 교체해 드려요. 그 사이에 결제 못 받는 일 없게 처리합니다."
+     }
+    ]
+   },
+   {
+    "id": "S11-D",
+    "title": "비용·현금영수증·이사·통장",
+    "blocks": [
+     {
+      "t": "faq",
+      "q": "매달 나가는 돈 진짜 없어요?",
+      "a": "관리비, 설치비, 가맹비는 없어요. 단말기 조건은 업종 따라 상담할 때 말씀드려요. 말씀드린 건 문자로 정리해서 보내드리고요."
+     },
+     {
+      "t": "faq",
+      "q": "현금영수증도 이걸로 끊어요?",
+      "a": "네, 같은 단말기로 끊을 수 있어요. 손님 전화번호만 입력하시면 됩니다."
+     },
+     {
+      "t": "faq",
+      "q": "{dong}에서 매장 옮기면 어떻게 해요?",
+      "a": "주소 바뀐 거 알려주시면 카드사 등록 정보랑 영수증 정보 바꿔드려요. 기기는 그냥 가져가시면 됩니다."
+     },
+     {
+      "t": "faq",
+      "q": "통장 나중에 바꿀 수 있어요?",
+      "a": "네, 바꿀 수 있어요. 새 통장 사본만 보내주시면 입금 계좌 변경해 드릴게요."
+     },
+     {
+      "t": "p",
+      "b": "---"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "S12",
+  "title": "인근 지역 안내",
+  "variants": [
+   {
+    "id": "S12-A",
+    "title": "같은 구 다른 동",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "{gugun} 다른 동네 페이지예요. 매장 있는 데 눌러보세요."
+     }
+    ]
+   },
+   {
+    "id": "S12-B",
+    "title": "근처도 같은 조건",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "{dong} 근처도 조건 똑같이 신청되고요. {gugun} 다른 동은 아래 있어요."
+     }
+    ]
+   },
+   {
+    "id": "S12-C",
+    "title": "순서와 조건은 동일",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "{gugun} 안에 다른 동네도 신청 순서랑 조건 같아요. 해당 동 페이지에서 보세요."
+     }
+    ]
+   },
+   {
+    "id": "S12-D",
+    "title": "매장 지역 선택",
+    "blocks": [
+     {
+      "t": "p",
+      "b": "아래는 {sido} {gugun} 다른 읍면동이에요. 매장 있는 동네 고르시면 됩니다."
+     }
+    ]
+   }
+  ]
+ }
+];
+
+// 슬러그 시드: 섹션마다 다른 변형이 뽑히도록 섹션 인덱스를 섞어 사용
+function poolSeed(str){var h=2166136261;for(var i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)>>>0;}return h;}
+/* 원본 content_pool.js 의 poolPick 은 FNV-1a 하위 2비트가 마지막 글자(섹션 번호)로만
+   정해져서, 4,677개 동 슬러그가 변형 조합 4가지로 뭉쳤다. 섹션 번호를 앞에 두고
+   상위 비트를 쓰면 4,677가지로 흩어진다. (섹션·변형 데이터는 원본 그대로) */
+function poolPick(slug,secIdx,n){return (poolSeed(secIdx+'#'+slug)>>>7)%n;}
+
+function poolEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function poolTok(s,v){return poolEsc(s).replace(/\{sido\}/g,v.sido).replace(/\{gugun\}/g,v.gugun).replace(/\{dong\}/g,v.dong).replace(/\{tel\}/g,v.tel);}
+
+function poolBlock(b,v){
+  var T=function(s){return poolTok(s,v);};
+  switch(b.t){
+    case 'p': return '<p>'+T(b.b)+'</p>';
+    case 'box': case 'warn':
+      return '<div class="box'+(b.t==='warn'?' warn':'')+'">'+(b.h?'<b>'+T(b.h)+'</b>':'')+T(b.b)+'</div>';
+    case 'compare':
+      return '<div class="pick">'+b.cols.map(function(c){return '<div><h4>'+T(c.h)+'</h4><ul>'+c.items.map(function(x){return '<li>'+T(x)+'</li>';}).join('')+'</ul></div>';}).join('')+'</div>';
+    case 'tri':
+      return '<div class="tri">'+b.cells.map(function(c){return '<div><b>'+T(c.h)+'</b><span>'+T(c.b)+'</span></div>';}).join('')+'</div>';
+    case 'flow':
+      return b.groups.map(function(g){return '<div class="flow">'+g.map(function(x){return '<span>'+T(x)+'</span>';}).join('<i>→</i>')+'</div>';}).join('');
+    case 'table':
+      return '<table>'+b.rows.map(function(r){return '<tr><th>'+T(r[0])+'</th>'+r.slice(1).map(function(c){return '<td>'+T(c)+'</td>';}).join('')+'</tr>';}).join('')+'</table>';
+    case 'check':
+      return '<ul class="check">'+b.items.map(function(x){return '<li>'+T(x)+'</li>';}).join('')+'</ul>';
+    case 'chips':
+      return '<div class="chips">'+b.items.map(function(x){return '<span>'+T(x)+'</span>';}).join('')+'</div>';
+    case 'faq':
+      return '<details><summary>'+T(b.q)+'</summary><p>'+T(b.a)+'</p></details>';
+  }
+  return '';
 }
 
-// ---- 상담 CTA (전화 + 문자) ----
-function ctaBlock(label){
-  return `<div class="cta"><h2>${esc(label)} 무료 상담</h2><p>매장 정보만 남겨주시면 가장 적합한 단말기를 안내해 드립니다.</p>
-<div class="cta-btns"><a href="tel:${PHONE_RAW}" class="btn btn-accent">전화 상담 ${PHONE}</a><a href="sms:${PHONE_RAW}" class="btn btn-ghost" style="color:#fff;border-color:rgba(255,255,255,.4)">문자 상담</a></div><div class="cta-free">설치비 0원 · 가맹비 0원 · 관리비 0원</div></div>`;
+// 지역 페이지 본문 전체 생성. opts.skip = ['S12'] 처럼 제외할 섹션 id 배열 (인근지역은 링크 목록과 함께 별도 처리 권장)
+function renderPool(slug,v,opts){
+  opts=opts||{};var skip=opts.skip||[];var html='';
+  for(var i=0;i<CONTENT_POOL.length;i++){
+    var sec=CONTENT_POOL[i];if(skip.indexOf(sec.id)>=0)continue;
+    var vr=sec.variants[poolPick(slug,i,sec.variants.length)];
+    var h2=sec.id==='S1'?'':'<h2>'+poolTok(sec.title,v)+'</h2>';
+    if(sec.id==='S11')h2='<h2>'+poolTok('{dong} 사장님들이 자주 묻는 질문',v)+'</h2>';
+    html+=h2+vr.blocks.map(function(b){return poolBlock(b,v);}).join('');
+  }
+  return html;
+}
+
+// 인근지역 도입 문장만 따로 (링크 목록은 기존 코드에서 생성)
+function renderNearIntro(slug,v){
+  var sec=CONTENT_POOL[CONTENT_POOL.length-1];
+  var vr=sec.variants[poolPick(slug,CONTENT_POOL.length-1,sec.variants.length)];
+  return vr.blocks.map(function(b){return poolBlock(b,v);}).join('');
+}
+
+// FAQPage 구조화 데이터용: 선택된 FAQ 변형의 Q/A 배열
+function poolFaqList(slug,v){
+  var idx=-1;for(var i=0;i<CONTENT_POOL.length;i++)if(CONTENT_POOL[i].id==='S11')idx=i;
+  var sec=CONTENT_POOL[idx];var vr=sec.variants[poolPick(slug,idx,sec.variants.length)];
+  return vr.blocks.filter(function(b){return b.t==='faq';}).map(function(b){return {q:poolTok(b.q,v),a:poolTok(b.a,v)};});
 }
 
 // =====================================================================
-//  지역별 본문 (지역마다 문구/순서 변형 · 방문/점검/당일 표현 없음)
+//  지역 페이지 디자인 (_design/cardterminal-dong-sample.html)
 // =====================================================================
-function seoBlocks(r){
-  const s=seedOf(r.url), d=r.dong, area=r.area, sido=r.sido, n=r.name;
-  const seg=(slots,idx)=>slots.map((sl,j)=>{const ln=sl.length;const x=(s*7+idx*131+j*53)%ln;let y=(s*13+idx*97+j*29)%ln;if(y===x)y=(y+1)%ln;let z=(s*17+idx*61+j*41)%ln;if(ln>2){while(z===x||z===y)z=(z+1)%ln;}const o=[sl[x]];if(ln>1)o.push(sl[y]);if(ln>2)o.push(sl[z]);return o.join(" ");}).join(" ");
-  const ttl=(arr,idx)=>arr[(s*5+idx*97)%arr.length];
+const REGION_STYLE = `
+:root{--ink:#17231E;--green:#1E5A3C;--green-deep:#12402A;--green-soft:#DDEBE2;--paper:#F5F6F2;--line:#D9DDD6;--mute:#5E6A63;--amber:#E9A62A;--amber-deep:#C9871A;--r:14px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;color:var(--ink);background:var(--paper);line-height:1.75;font-size:16px;word-break:keep-all}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:820px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:0;z-index:20;background:rgba(245,246,242,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav{height:64px;display:flex;align-items:center;justify-content:space-between;max-width:1080px;margin:0 auto;padding:0 20px}
+.nav .call{background:var(--green);color:#fff;padding:9px 16px;border-radius:999px;font-weight:700;font-size:14px}
+.crumb{font-size:13px;color:var(--mute);padding:20px 0 0}
+.crumb a:hover{color:var(--green)}
+.crumb span{margin:0 6px}
+.top{padding:16px 0 28px;border-bottom:1px solid var(--line)}
+h1{font-size:clamp(28px,4.4vw,40px);font-weight:800;line-height:1.2;letter-spacing:-.02em;margin-bottom:12px}
+.meta{font-size:13px;color:var(--mute);display:flex;gap:14px;flex-wrap:wrap}
+.thumb{margin:24px 0 0;aspect-ratio:16/8;border-radius:var(--r);background:linear-gradient(135deg,#2a4d3c,#1E5A3C 60%,#3a7a58);display:grid;place-items:center;color:#cfe3d6;font-size:14px}
+article{padding:32px 0 48px}
+h2{font-size:22px;font-weight:750;margin:40px 0 12px;letter-spacing:-.02em}
+h3{font-size:17px;font-weight:700;margin:22px 0 8px}
+p{margin-bottom:14px}
+.box{background:#fff;border:1px solid var(--line);border-left:5px solid var(--green);border-radius:10px;padding:16px 18px;margin:18px 0}
+.box.warn{border-left-color:var(--amber)}
+.box b{display:block;margin-bottom:4px}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.pick div{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px}
+.pick h4{font-size:16px;font-weight:750;margin-bottom:6px}
+.pick ul{list-style:none;font-size:14px;color:var(--mute)}
+.pick li:before{content:"·";margin-right:6px;color:var(--green);font-weight:900}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:15px;background:#fff;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line)}
+th{background:var(--green-soft);font-weight:700;width:34%}
+tr:last-child td,tr:last-child th{border-bottom:none}
+.check{list-style:none;margin:12px 0 18px}
+.check li{padding:6px 0 6px 28px;position:relative}
+.check li:before{content:"✓";position:absolute;left:4px;color:var(--green);font-weight:800}
+.emoji-row{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 20px}
+.emoji-row span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:14px}
+.cta{margin:40px 0;background:var(--green-deep);color:#fff;border-radius:var(--r);padding:28px;text-align:center}
+.cta b{display:block;font-size:22px;margin-bottom:6px}
+.cta .num{font-size:30px;font-weight:800;color:var(--amber);margin:8px 0 16px}
+.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;padding:13px 22px;border-radius:12px;font-weight:700;font-size:15px}
+.btn-main{background:var(--amber);color:var(--ink)}
+.btn-line{border:2px solid rgba(255,255,255,.6);color:#fff}
+details{background:#fff;border:1px solid var(--line);border-radius:10px;margin-bottom:8px}
+summary{cursor:pointer;padding:14px 16px;font-weight:700;font-size:15px;list-style:none;display:flex;justify-content:space-between}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"+";color:var(--mute)}
+details[open] summary:after{content:"–"}
+details p{padding:0 16px 14px;color:var(--mute);font-size:14px;margin:0}
+.near{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.near a{background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:14px}
+.near a:hover{background:var(--green);color:#fff;border-color:var(--green)}
+footer{padding:24px 0;font-size:13px;color:var(--mute);border-top:1px solid var(--line)}
+.fl{position:fixed;right:18px;bottom:18px;display:flex;flex-direction:column;gap:10px;z-index:30}
+.fl a{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-size:22px;box-shadow:0 12px 24px -8px rgba(0,0,0,.4)}
+.fl .tel{background:var(--green);color:#fff}.fl .sms{background:var(--amber)}
+@media(max-width:600px){.pick{grid-template-columns:1fr}.fl{right:0;left:0;bottom:0;flex-direction:row;gap:0}.fl a{flex:1;border-radius:0;font-size:16px;font-weight:800}.fl .tel:after{content:"전화 상담"}.fl .sms:after{content:"문자 문의"}body{padding-bottom:58px}}
 
-  const POOL=[
-    { h:[`${esc(d)} 카드단말기 안내`,`${esc(area)} 카드단말기 설치`,`${esc(n)} 카드단말기`,`${esc(d)} 결제 단말기 가이드`,`${esc(area)}에서 카드단말기 고르기`],
-      s:[
-        [`${esc(n)}에서 카드단말기를 알아보고 계신가요?`,`${esc(d)} 매장 결제 환경을 준비 중이라면 잘 오셨습니다.`,`${esc(area)}에서 단말기 도입을 고민하는 사장님께 안내드립니다.`,`${esc(n)} 매장에 맞는 결제기를 찾고 계신다면 참고하세요.`,`${esc(d)} 개업을 앞두고 결제 수단을 정리 중이라면 도움이 됩니다.`],
-        [`${J(esc(area),"은","는")} 카페·음식점·미용실까지 업종이 다양해 매장마다 맞는 모델이 다릅니다.`,`${esc(d)} 상권 특성상 결제 속도와 안정성이 매출에 바로 영향을 줍니다.`,`${esc(area)} 일대는 소형 매장이 많아 비용과 회선 환경을 함께 봐야 합니다.`,`${esc(d)}처럼 손님 왕래가 있는 곳은 끊김 없는 결제가 중요합니다.`,`${esc(area)} 매장은 업종과 규모에 따라 적합한 단말기가 갈립니다.`],
-        [`${SITE_NAME}가 ${esc(d)}에 맞춰 무료로 안내해 드립니다.`,`성급한 구매보다 상담을 먼저 받아보시길 권합니다.`,`매장 형태부터 확인하면 불필요한 지출을 줄일 수 있습니다.`,`처음 개업이라면 결제 방식부터 차근히 정리해 보세요.`,`혼자 검색하기보다 한 번 문의해 보시는 편이 빠릅니다.`],
-      ]},
-    { h:[`${esc(d)} 매장에 맞는 단말기 고르기`,`${esc(area)} 단말기 선택 기준`,`어떤 단말기가 맞을까`,`${esc(d)}에서 후회 없이 고르려면`],
-      s:[
-        [`단말기는 한 번 정하면 오래 쓰는 장비입니다.`,`초기 비용만 보지 말고 수수료·안정성까지 함께 따져야 합니다.`,`${esc(d)} 매장 형태에 맞는 모델을 고르는 게 핵심입니다.`,`결제 위치가 고정인지 이동이 있는지부터 정해보세요.`,`업종과 손님층에 따라 받을 결제 수단도 달라집니다.`],
-        [`승인 속도가 느리거나 자주 끊기면 그 자체로 손해입니다.`,`${esc(area)} 상권에선 빠른 결제가 회전율과 직결됩니다.`,`인터넷이 약한 곳이면 LTE 겸용이 안전합니다.`,`손님 대기 시간을 줄이는 단말기가 좋은 단말기입니다.`,`안정성은 매출과 직결되는 요소입니다.`],
-        [`${SITE_NAME}는 ${esc(area)} 업종별 사례가 많아 안내가 구체적입니다.`,`사장님 우선순위에 맞춰 모델을 제안합니다.`,`불필요한 상위 모델을 권하지 않습니다.`,`예산에 맞춰 솔직하게 안내합니다.`,`${esc(d)} 매장에 과한 구성을 권하지 않는 게 원칙입니다.`],
-      ]},
-    { raw:[
-        `<h2>${esc(d)} 단말기 종류</h2><div class="pills"><span class="pill">무선 이동형</span><span class="pill">유선 데스크형</span></div><p>무선 이동형은 충전식이라 배달·테이블 결제에 좋고, 유선 데스크형은 카운터 고정용으로 빠르고 경제적입니다. 두 종류 모두 카드와 삼성·카카오·네이버페이 같은 주요 간편결제를 함께 받을 수 있어 ${esc(d)} 매장에 맞게 고르면 됩니다.</p>`,
-        `<h2>${esc(area)}에서 쓰는 단말기</h2><p>이동이 잦은 매장은 무선 이동형이 편하고, 자리가 고정된 곳은 유선 데스크형이 승인이 빠르고 관리가 단순합니다. 두 종류 모두 삼성·카카오·네이버페이 같은 간편결제를 함께 받을 수 있습니다. ${esc(d)} 매장 동선을 보고 골라드립니다.</p>`,
-        `<h2>${esc(d)} 단말기, 무엇으로 시작할까</h2><p>초기 비용을 아끼려면 유선 데스크형이 부담이 적고, 배달·외부 결제가 잦으면 무선 이동형이 편합니다. 설치비·가맹비·관리비가 들지 않아 시작 부담도 작습니다. ${esc(area)} 업종에 맞춰 조합을 잡으면 됩니다.</p>`,
-      ]},
-    { h:[`${esc(area)} 간편결제 흐름`,`${esc(d)} 결제 수단 트렌드`,`간편결제, 받아야 할까`,`요즘 ${esc(area)} 결제 현황`],
-      s:[
-        [`${esc(d)} 매장에서 삼성페이·카카오페이·네이버페이 비중이 빠르게 늘고 있습니다.`,`젊은 손님이 많은 ${esc(area)}일수록 간편결제 수요가 큽니다.`,`현금보다 간편결제를 먼저 찾는 손님이 늘었습니다.`,`${esc(d)} 상권에서 페이 결제는 이제 기본이 됐습니다.`],
-        [`그래서 카드뿐 아니라 주요 간편결제 지원 여부를 꼭 확인해야 합니다.`,`지원 결제 수단이 매출 기회와 직결됩니다.`,`손님이 쓰는 결제 수단을 막으면 그만큼 매출이 샙니다.`,`결제 수단이 많을수록 손님 이탈이 줍니다.`],
-        [`${SITE_NAME}는 ${esc(n)} 주 고객층을 보고 어디까지 받을지 같이 정합니다.`,`${esc(d)} 업종에 맞는 결제 구성을 제안합니다.`,`상권에 맞춰 실속 있게 구성합니다.`,`불필요한 수단까지 욕심내지 않게 정리해 드립니다.`],
-      ]},
-    { h:[`${esc(area)} 업종별 추천`,`${esc(d)} 업종에 맞는 선택`,`업종별 단말기 가이드`,`내 업종엔 뭐가 맞을까`],
-      s:[
-        [`카페·디저트는 회전이 빨라 승인 속도가 중요합니다.`,`음식점은 테이블 결제가 있으면 무선형을 더하면 좋습니다.`,`미용실·네일샵 같은 예약 매장은 유선형으로도 충분합니다.`,`배달 비중이 큰 곳은 무선 이동형이 편합니다.`,`패스트푸드·분식은 빠른 승인이 생명입니다.`],
-        [`병원·학원처럼 정기 결제가 있는 곳은 안정성이 우선입니다.`,`무인·셀프 업종은 키오스크 연동형을 검토하세요.`,`소규모 소매점은 기본형으로 시작해도 됩니다.`,`꽃집·공방 같은 1인 매장은 간단한 구성이 낫습니다.`,`프랜차이즈는 본사 정책과 호환되는지 확인이 필요합니다.`],
-        [`${esc(d)}에서 어떤 업종을 준비 중인지 알려주시면 맞춰 안내드립니다.`,`매장 동선과 결제 흐름까지 고려해 제안합니다.`,`${esc(area)} 상황에 맞는 가장 효율적인 조합을 잡아드립니다.`,`업종만 말씀하셔도 후보를 좁혀드립니다.`],
-      ]},
-    { h:[`${esc(d)} 신청 절차`,`설치는 이렇게 진행됩니다`,`${esc(d)} 신청부터 개통까지`,`빠른 설치 과정`],
-      s:[
-        [`전화나 문자로 ${esc(n)} 매장 정보를 남기는 것부터 시작합니다.`,`먼저 상담으로 ${esc(d)} 매장 상황을 파악합니다.`,`업종·결제 방식을 듣고 모델을 추립니다.`,`간단한 문의 한 번이면 절차가 시작됩니다.`,`매장 위치와 업종만 알려주셔도 됩니다.`],
-        [`이어 카드 가맹점 신청과 서류를 함께 도와드립니다.`,`복잡한 가맹 절차는 ${SITE_NAME}가 대신 처리합니다.`,`필요한 서류만 안내하면 나머지는 맡겨두셔도 됩니다.`,`서류는 사진으로 보내주셔도 됩니다.`,`가맹 심사 진행 상황도 알려드립니다.`],
-        [`준비가 되면 빠르게 설치·개통해 드립니다.`,`불필요하게 기다리지 않도록 신속히 진행합니다.`,`설치 후 사용법까지 안내해 바로 쓰실 수 있게 합니다.`,`개통까지 매끄럽게 이어지도록 챙깁니다.`,`진행 일정은 미리 안내드립니다.`],
-      ]},
-    { h:[`요금과 수수료`,`${esc(d)} 비용 안내`,`구매·렌탈과 수수료`,`${esc(d)} 요금 구조`],
-      s:[
-        [`유선 데스크 단말기는 월 9,900원, 3년 할부로 부담이 적습니다.`,`무선 이동형은 110,000원 또는 90,000원 일시불로 선택할 수 있습니다.`,`설치비·가맹비·관리비가 들지 않아 시작 비용 부담이 작습니다.`,`예산에 맞춰 모델과 결제 방식을 정하면 됩니다.`],
-        [`카드 수수료는 매출 규모에 따라 우대 기준이 다릅니다.`,`영세·중소 가맹점 우대 수수료가 적용될 수 있습니다.`,`정산 주기와 수수료율을 함께 확인해야 합니다.`,`예상 매출을 기준으로 안내하는 게 정확합니다.`],
-        [`${SITE_NAME}는 숨은 비용 없이 투명하게 설명드립니다.`,`불필요한 부가 서비스를 끼워 넣지 않습니다.`,`견적은 항목별로 명확히 알려드립니다.`,`나중에 추가 비용으로 당황할 일이 없게 합니다.`],
-      ]},
-    { h:[`${esc(area)}에서 ${SITE_NAME}를 고르는 이유`,`왜 ${SITE_NAME}인가`,`믿고 맡길 수 있는 이유`,`${esc(d)} 사장님들이 찾는 이유`],
-      s:[
-        [`판매로 끝내지 않고 설치·개통·상담까지 이어서 책임집니다.`,`${esc(area)} 다양한 업종을 다뤄 놓치기 쉬운 부분을 먼저 짚어드립니다.`,`약정·수수료·결제 수단까지 미리 확인해 드립니다.`,`처음 개업이라 뭘 물어야 할지 모를 때 특히 도움이 됩니다.`],
-        [`${esc(n)}처럼 매장마다 사정이 다른 곳엔 정답 하나를 강요하지 않습니다.`,`사장님 우선순위를 먼저 듣고 맞는 모델을 권합니다.`,`과한 구성을 권하지 않는 게 원칙입니다.`,`예산에 맞춰 솔직하게 안내합니다.`],
-      ]},
-  ];
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:16px 0;padding:12px;background:#fff;border:1px solid var(--line);border-radius:12px}
+.flow span{background:var(--green-soft);color:var(--green-deep);font-weight:700;font-size:13px;padding:7px 12px;border-radius:999px;white-space:nowrap}
+.flow span:last-child{background:var(--amber);color:var(--ink)}
+.flow i{font-style:normal;color:var(--mute);font-weight:800}
+.tri{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+.tri div{background:#fff;border:1px solid var(--line);border-top:4px solid var(--green);border-radius:10px;padding:12px 10px;text-align:center}
+.tri b{display:block;font-size:14px;margin-bottom:3px}.tri span{font-size:12px;color:var(--mute)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 18px}
+.chips span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 13px;font-size:14px}
+@media(max-width:600px){.tri{grid-template-columns:1fr}}
 
-  const blocks = POOL.map((sec,idx)=>{
-    if(sec.raw) return sec.raw[(s*11+idx*61)%sec.raw.length];
-    return `<h2>${ttl(sec.h,idx)}</h2><p>${seg(sec.s,idx)}</p>`;
-  });
-  const order=blocks.map((_,i)=>i);
-  let x=(s||1)>>>0;
-  for(let i=order.length-1;i>0;i--){x=(Math.imul(x,1103515245)+12345)>>>0;const j=x%(i+1);const t=order[i];order[i]=order[j];order[j]=t;}
-  return order.map(i=>blocks[i]);
-}
-function seoContent(r){ return seoBlocks(r).join("\n"); }
+.logo{display:inline-flex;align-items:baseline;gap:3px;text-decoration:none;line-height:1}
+.logo .lp{font-weight:900;font-size:21px;letter-spacing:.06em;color:var(--green)}
+.logo .ls{font-family:"Kaushan Script","Brush Script MT","Segoe Script",cursive;font-style:italic;font-size:27px;color:#D7262E;display:inline-block;transform:skewX(-14deg) translateY(2px);letter-spacing:-.02em}
+/* ── 시·도 / 시·군·구 / 색인 페이지 (기존 구조 유지, 색만 새 디자인) ── */
+.thumb{overflow:hidden;padding:0}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.lead{color:var(--mute);margin:0 0 6px}
+.content p{margin-bottom:14px}
+.child,.ar-sido{margin:36px 0 0}
+.ar-sido h2 span{font-size:13px;font-weight:500;color:var(--mute)}
+.child-list,.ar-guns2,.sido-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.child-list a,.ar-gu2,.sido-cell{background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:14px}
+.child-list a:hover,.ar-gu2:hover,.sido-cell:hover{background:var(--green);color:#fff;border-color:var(--green)}
+`;
 
-// ---- 본문 시각 요소 ----
-function compareTable(r){
-  return `<div class="rtable-wrap"><table class="rtable"><thead><tr><th>구분</th><th>🖥️ 유선 데스크형</th><th>📱 무선 이동형</th></tr></thead><tbody>
-<tr><th>가격</th><td><b>월 9,900원</b><br><small>3년 할부</small></td><td><b>110,000 / 90,000원</b><br><small>일시불</small></td></tr>
-<tr><th>설치 위치</th><td>카운터 고정</td><td>테이블·배달·이동</td></tr>
-<tr><th>결제 수단</th><td>카드 · 간편결제</td><td>카드 · 간편결제</td></tr>
-<tr><th>추천 매장</th><td>고정 매장</td><td>배달·외부 결제 잦은 곳</td></tr>
-</tbody></table></div>`;
-}
-function keyBox(r){
-  return `<div class="ibox"><div class="ibox-h">✅ ${esc(r.dong)} 설치, 이것만 기억하세요</div><div class="ibox-grid">
-<div><span>💰</span>설치비·가맹비·관리비 <b>0원</b></div>
-<div><span>🏷️</span>유선 월 9,900원 / 무선 9만원대</div>
-<div><span>📲</span>삼성·카카오·네이버페이 지원</div>
-<div><span>📝</span>가맹 신청 서류 대행</div>
-<div><span>⚡</span>빠른 설치·개통</div>
-<div><span>☎️</span>연중무휴 24시간 상담</div>
-</div></div>`;
-}
-function bizTable(r){
-  return `<div class="rtable-wrap"><table class="rtable rtable-2"><thead><tr><th>업종</th><th>추천 단말기</th></tr></thead><tbody>
-<tr><td>☕ 카페·디저트</td><td>유선 데스크형 <small>(빠른 승인)</small></td></tr>
-<tr><td>🍽️ 음식점</td><td>무선 이동형 <small>(테이블 결제)</small></td></tr>
-<tr><td>💇 미용실·네일</td><td>유선 데스크형</td></tr>
-<tr><td>🛵 배달 위주</td><td>무선 이동형</td></tr>
-<tr><td>🏪 편의·소매</td><td>유선 데스크형</td></tr>
-</tbody></table></div>`;
-}
-function callout(r){
-  return `<div class="callout"><div class="callout-tx"><div class="callout-t">📍 ${esc(r.name)} 카드단말기, 무료로 안내해 드려요</div><div class="callout-b">매장 위치와 업종만 알려주시면 가장 적합한 단말기를 골라드립니다. 설치비·가맹비·관리비 0원.</div></div><a class="callout-btn" href="tel:${PHONE_RAW}">전화 상담 ${PHONE}</a></div>`;
+const REGION_HEADER = `<header><div class="nav"><a class="logo" href="/"><span class="lp">PRIME</span><span class="ls">pos</span></a><a class="call" href="tel:${PHONE_RAW}">${PHONE}</a></div></header>`;
+const REGION_FOOTER = `<footer><div class="wrap">${SITE_NAME} · 상담 ${PHONE} · 평일 09\u201318시</div></footer>`;
+const REGION_FLOAT  = `<div class="fl"><a class="tel" href="tel:${PHONE_RAW}" aria-label="전화">📞</a><a class="sms" href="sms:${PHONE_RAW}" aria-label="문자">💬</a></div>`;
+
+/* 상담 CTA — dong-sample 의 .cta 박스 */
+function ctaBox(label){
+  return `<div class="cta"><b>${esc(label)} 카드단말기 상담</b>가게 종류만 말씀해 주시면 맞는 단말기를 바로 알려드립니다<div class="num">${PHONE}</div><div class="btns"><a class="btn btn-main" href="tel:${PHONE_RAW}">전화 걸기</a><a class="btn btn-line" href="sms:${PHONE_RAW}">문자 보내기</a></div></div>`;
 }
 
-
-// ---- FAQ (가독성 개선 · 항목 확대) ----
-function faqBlock(r){
-  const s=seedOf(r.url+"faq"), d=r.dong, sido=r.sido, area=r.area;
-  const QA=[
-    [`${esc(d)}도 설치되나요?`, `네, ${esc(sido)} 전역에서 진행하며 ${esc(area)} 지역도 포함됩니다.`],
-    [`설치까지 얼마나 걸리나요?`, `상담 후 가맹 심사를 거쳐 빠르게 설치·개통해 드립니다. 일정은 미리 안내드립니다.`],
-    [`개업 전에 미리 신청해도 되나요?`, `가능합니다. 오픈 일정에 맞춰 신청과 설치 일정을 잡아드립니다.`],
-    [`기존 단말기에서 교체도 되나요?`, `됩니다. 사용 중인 단말기 상황을 알려주시면 교체 방법과 비용을 안내드립니다.`],
-    [`간편결제(삼성페이 등)도 받을 수 있나요?`, `유선·무선 단말기 모두에서 삼성·카카오·네이버페이 등 주요 간편결제를 함께 받을 수 있습니다.`],
-    [`설치비나 가맹비가 따로 드나요?`, `설치비·가맹비·관리비는 들지 않습니다. 단말기 비용 외 별도 부담이 없습니다.`],
-    [`유선 단말기 가격이 어떻게 되나요?`, `유선 데스크 단말기는 월 9,900원, 3년 할부로 이용하실 수 있습니다.`],
-    [`무선 단말기 가격은요?`, `무선 이동형은 110,000원 또는 90,000원 일시불 중에서 선택하실 수 있습니다.`],
-    [`수수료는 얼마인가요?`, `매출 규모에 따라 우대 기준이 달라 상담 시 정확히 안내드립니다.`],
-    [`인터넷이 약한데 괜찮나요?`, `LTE 겸용 모델이면 안정적으로 결제됩니다.`],
-    [`상담만 받아도 되나요?`, `물론입니다. 구매 의무 없이 ${esc(d)} 매장에 맞는 안내만 받으셔도 됩니다.`],
-    [`문의는 어떻게 하나요?`, `전화 ${PHONE} 또는 문자로 편하게 남겨주세요.`],
-  ];
-  // seed로 7개 선택(가격/문의 관련은 항상 포함)
-  const must=[5,6,7];
-  const idxs=[...must];
-  let k=s;
-  /* k*1103515245 는 2^53 을 넘겨 double 정밀도가 깨진다. 저비트가 뭉개지면
-     k%QA.length 가 몇 값만 반복해 7개를 못 채우고 루프가 끝나지 않는다
-     (지역 페이지 4,967개 중 56개가 여기서 32.5초 CPU 한도까지 돌다 죽었다).
-     32비트 곱셈은 Math.imul 로 해야 정확하다. 상한은 만약을 위한 안전장치. */
-  for(let guard=0; idxs.length<7 && guard<1000; guard++){ k=(Math.imul(k,1103515245)+12345)>>>0; const i=k%QA.length; if(!idxs.includes(i)) idxs.push(i); }
-  const items=idxs.map(i=>`<div class="faq"><div class="q">Q. ${QA[i][0]}</div><div class="a">${QA[i][1]}</div></div>`).join("");
-  const faqLd={"@context":"https://schema.org","@type":"FAQPage","mainEntity":idxs.map(i=>({"@type":"Question","name":QA[i][0],"acceptedAnswer":{"@type":"Answer","text":QA[i][1]}}))};
-  return `<h2>${esc(d)} 자주 묻는 질문</h2>${items}<script type="application/ld+json">${JSON.stringify(faqLd)}</script>`;
+/* 본문 = 문단 풀. CTA 는 "매출 관리"(S9) 뒤 · "사용 중 문제 대응"(S10) 앞.
+   인근 지역(S12)은 링크 목록과 함께 따로 붙이므로 양쪽에서 제외한다. */
+const POOL_IDS  = CONTENT_POOL.map(s=>s.id);
+const POOL_CUT  = POOL_IDS.indexOf("S9")+1;
+const POOL_SKIP_HEAD = POOL_IDS.slice(POOL_CUT);
+const POOL_SKIP_TAIL = POOL_IDS.slice(0,POOL_CUT).concat(["S12"]);
+function poolBody(slug, v, label){
+  return renderPool(slug,v,{skip:POOL_SKIP_HEAD})+ctaBox(label)+renderPool(slug,v,{skip:POOL_SKIP_TAIL});
 }
+function poolVars(sido,gugun,dong){ return {sido:sido,gugun:gugun,dong:dong,tel:PHONE}; }
+/* FAQPage 구조화 데이터도 본문과 같은 조사 교정을 거친다 */
+function poolFaq(slug,v,names){ return poolFaqList(slug,v).map(x=>({q:fixJosa(x.q,names),a:fixJosa(x.a,names)})); }
 
-// ---- 공통 페이지 셸 ----
-function shell({title,desc,canonical,ogimg,crumb,h1,heroCap,leadText,bodyMain,seedStr,areaServed,trail}){
+// ---- 공통 페이지 셸 (_design/cardterminal-dong-sample.html 레이아웃) ----
+function shell({title,desc,canonical,ogimg,crumb,h1,metaArea,leadText,bodyMain,seedStr,areaServed,trail,faq}){
   const pub=pubDate(seedStr), mod=modDate();
   const jsonld=[
-    {"@context":"https://schema.org","@type":"LocalBusiness","name":`${SITE_NAME} ${areaServed}`,"description":desc,"url":canonical,"image":ogimg,"telephone":PHONE,"areaServed":areaServed,"address":{"@type":"PostalAddress","addressCountry":"KR"},"priceRange":"₩₩"},
+    {"@context":"https://schema.org","@type":"LocalBusiness","name":`${SITE_NAME} ${areaServed}`,"description":desc,"url":canonical,"image":ogimg,"telephone":PHONE,"areaServed":areaServed,"address":{"@type":"PostalAddress","addressCountry":"KR"}},
     {"@context":"https://schema.org","@type":"WebPage","url":canonical,"name":title,"datePublished":ymd(pub),"dateModified":ymd(mod)}
   ];
   if(trail&&trail.length) jsonld.push({"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":trail.map((t,i)=>({"@type":"ListItem","position":i+1,"name":t.n,"item":SITE+t.u}))});
+  if(faq&&faq.length) jsonld.push({"@context":"https://schema.org","@type":"FAQPage","mainEntity":faq.map(x=>({"@type":"Question","name":x.q,"acceptedAnswer":{"@type":"Answer","text":x.a}}))});
   return `<!doctype html><html lang="ko"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title><meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${canonical}">
 <meta property="og:type" content="website"><meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${canonical}">
 <meta property="og:image" content="${ogimg}"><meta name="naver-site-verification" content="759d642455574827918eab08baa0d3a149a3de58"><meta name="DaumWebMasterTool" content="22dd20f57faea1b7b131da081d584636ff29fa7fbfde811d47d329b108c082e7:Z1sDHiFp/naRimWdsgS5Tg==">
 ${HEAD_ICON}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
-<style>${STYLE}</style>
+<link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>${REGION_STYLE}</style>
 <script type="application/ld+json">${JSON.stringify(jsonld)}</script>
-</head><body>${NAV}
-<main class="wrap narrow">
-<div class="region-hero">
-<div class="crumb">${crumb}</div>
-<div class="dateline">최초 등록일 ${ymdK(pub)} · 최종 수정일 ${ymdK(mod)}</div>
-<h1>${h1}</h1>
-<div class="hero-photo"><img src="${ogimg}" alt="${esc(areaServed)} 카드단말기 설치" loading="eager" width="1200" height="628"><div class="hero-cap"><b>${esc(heroCap)}</b> 카드단말기 설치·판매</div></div>
-<p class="lead">${esc(leadText)}</p>
+</head><body>
+${REGION_HEADER}
+
+<div class="wrap">
+  <div class="crumb">${crumb}</div>
+  <div class="top">
+    <h1>${h1}</h1>
+    <div class="meta"><span>발행 ${ymdK(pub)}</span><span>수정 ${ymdK(mod)}</span><span>${esc(metaArea)}</span></div>
+    <div class="thumb"><img src="${ogimg}" alt="${esc(areaServed)} 카드단말기 설치" loading="eager" width="1200" height="628"></div>
+  </div>
+
+  <article>${leadText?`<p class="lead">${esc(leadText)}</p>`:""}${bodyMain}</article>
 </div>
-${bodyMain}
-</main>${FOOTER}${NAVER_WA}<script>(function(){var U="/api/track",S={},W=30000;function K(ty){return "tk_"+ty+"_"+location.pathname;}function seen(ty){var k=K(ty),n=Date.now();if(S[k]&&n-S[k]<W)return 1;try{var v=sessionStorage.getItem(k);if(v&&n-(+v)<W)return 1;}catch(e){}return 0;}function mark(ty){var k=K(ty),n=Date.now();S[k]=n;try{sessionStorage.setItem(k,""+n);}catch(e){}}function t(ty,b){try{var d=JSON.stringify({type:ty,page:location.pathname,ref:document.referrer,b:b||""}),ok=false;if(navigator.sendBeacon){try{ok=navigator.sendBeacon(U,new Blob([d],{type:"application/json"}));}catch(e){}}if(!ok){try{fetch(U,{method:"POST",headers:{"Content-Type":"application/json"},body:d,keepalive:true}).catch(function(){});}catch(e){}}}catch(e){}}function c(ty,b){if(seen(ty))return;mark(ty);t(ty,b);}function L(a){try{var s=(a.getAttribute&&a.getAttribute("aria-label"))||a.textContent||"";var o="",sp=0,i,ch;for(i=0;i<s.length;i++){ch=s.charCodeAt(i);if(ch===32||ch===9||ch===10||ch===13){if(!sp){o+=" ";sp=1;}}else{o+=s.charAt(i);sp=0;}}return o.trim().slice(0,40);}catch(e){return "";}}function WV(v){try{if(navigator.userAgent.indexOf("; wv)")<0)return;var i=v.indexOf(":");if(i<0)return;var sch=v.slice(0,i),num="",j,ch;if(sch!=="tel"&&sch!=="sms")return;for(j=i+1;j<v.length;j++){ch=v.charCodeAt(j);if(ch>=48&&ch<=57)num+=v.charAt(j);}if(!num)return;var sc=sch==="tel"?"tel":"smsto",ac=sch==="tel"?"DIAL":"SENDTO",done=0;var f=function(){done=1;};document.addEventListener("visibilitychange",f,{once:true});window.addEventListener("pagehide",f,{once:true});setTimeout(function(){if(done||document.visibilityState!=="visible")return;location.href="intent://"+num+"#Intent;scheme="+sc+";action=android.intent.action."+ac+";end";},800);}catch(e){}}function h(e,early){var a=e.target&&e.target.closest&&e.target.closest("a,button,[data-tk]");if(!a)return;var k=(a.getAttribute&&a.getAttribute("data-tk"))||"",v=(a.getAttribute&&a.getAttribute("href"))||"";if(!k&&!v&&a.closest){var p=a.closest("a[href]");if(p){a=p;v=p.getAttribute("href")||"";}}if(k==="tel"||v.indexOf("tel:")===0){c("tel",L(a));if(!early)WV(v);}else if(k==="sms"||v.indexOf("sms:")===0){c("sms",L(a));if(!early)WV(v);}else if(!early&&k==="contact")c("contact",L(a));}document.addEventListener("pointerdown",function(e){h(e,1);},true);document.addEventListener("click",function(e){h(e,0);},true);if(location.pathname.indexOf("/api/")!==0)t("view");})();</script></body></html>`;
+
+${REGION_FOOTER}
+${REGION_FLOAT}${NAVER_WA}<script>(function(){var U="/api/track",S={},W=30000;function K(ty){return "tk_"+ty+"_"+location.pathname;}function seen(ty){var k=K(ty),n=Date.now();if(S[k]&&n-S[k]<W)return 1;try{var v=sessionStorage.getItem(k);if(v&&n-(+v)<W)return 1;}catch(e){}return 0;}function mark(ty){var k=K(ty),n=Date.now();S[k]=n;try{sessionStorage.setItem(k,""+n);}catch(e){}}function t(ty,b){try{var d=JSON.stringify({type:ty,page:location.pathname,ref:document.referrer,b:b||""}),ok=false;if(navigator.sendBeacon){try{ok=navigator.sendBeacon(U,new Blob([d],{type:"application/json"}));}catch(e){}}if(!ok){try{fetch(U,{method:"POST",headers:{"Content-Type":"application/json"},body:d,keepalive:true}).catch(function(){});}catch(e){}}}catch(e){}}function c(ty,b){if(seen(ty))return;mark(ty);t(ty,b);}function L(a){try{var s=(a.getAttribute&&a.getAttribute("aria-label"))||a.textContent||"";var o="",sp=0,i,ch;for(i=0;i<s.length;i++){ch=s.charCodeAt(i);if(ch===32||ch===9||ch===10||ch===13){if(!sp){o+=" ";sp=1;}}else{o+=s.charAt(i);sp=0;}}return o.trim().slice(0,40);}catch(e){return "";}}function WV(v){try{if(navigator.userAgent.indexOf("; wv)")<0)return;var i=v.indexOf(":");if(i<0)return;var sch=v.slice(0,i),num="",j,ch;if(sch!=="tel"&&sch!=="sms")return;for(j=i+1;j<v.length;j++){ch=v.charCodeAt(j);if(ch>=48&&ch<=57)num+=v.charAt(j);}if(!num)return;var sc=sch==="tel"?"tel":"smsto",ac=sch==="tel"?"DIAL":"SENDTO",done=0;var f=function(){done=1;};document.addEventListener("visibilitychange",f,{once:true});window.addEventListener("pagehide",f,{once:true});setTimeout(function(){if(done||document.visibilityState!=="visible")return;location.href="intent://"+num+"#Intent;scheme="+sc+";action=android.intent.action."+ac+";end";},800);}catch(e){}}function h(e,early){var a=e.target&&e.target.closest&&e.target.closest("a,button,[data-tk]");if(!a)return;var k=(a.getAttribute&&a.getAttribute("data-tk"))||"",v=(a.getAttribute&&a.getAttribute("href"))||"";if(!k&&!v&&a.closest){var p=a.closest("a[href]");if(p){a=p;v=p.getAttribute("href")||"";}}if(k==="tel"||v.indexOf("tel:")===0){c("tel",L(a));if(!early)WV(v);}else if(k==="sms"||v.indexOf("sms:")===0){c("sms",L(a));if(!early)WV(v);}else if(!early&&k==="contact")c("contact",L(a));}document.addEventListener("pointerdown",function(e){h(e,1);},true);document.addEventListener("click",function(e){h(e,0);},true);if(location.pathname.indexOf("/api/")!==0)t("view");})();</script></body>
+</html>`;
 }
 
 // ---- 읍면동 상세 ----
@@ -842,33 +1965,21 @@ function renderDong(r){
   r.area=r.gu;
   const canonical=`${SITE}/region/${r.url}`;
   const ogimg=photoUrl(r.url);
-  const B=seoBlocks(r);
-  const body=`<div class="content">${B.slice(0,2).join("\n")}</div>
-<h2>${esc(r.dong)} 유선 vs 무선 단말기 비교</h2>${compareTable(r)}
-<div class="content">${B.slice(2,4).join("\n")}</div>
-${keyBox(r)}
-<div class="content">${B.slice(4,6).join("\n")}</div>
-<h2>${esc(r.dong)} 업종별 추천 단말기</h2>${bizTable(r)}
-<div class="content">${B.slice(6).join("\n")}</div>
-${callout(r)}
-${faqBlock(r)}
-<h2>${esc(r.dong)}에서 많이 찾는 단말기</h2>${products(r.dong)}
-${ctaBlock(r.dong)}
-${nearbyDong(r)}`;
-  return shell({title:`${r.name} 카드단말기 설치·판매 | ${SITE_NAME}`,
-    desc:`${r.name} 카드단말기 설치/판매 전문 ${SITE_NAME}. ${r.dong} 매장에 맞는 무선·유선 카드단말기 추천, 설치비·가맹비·관리비 0원, 빠른 설치, 24시간 상담. ${r.gu} 지역 안내.`,
+  const v=poolVars(r.sido,r.gu,r.dong);
+  const body=fixJosa(poolBody(r.url,v,r.dong)+nearbyDong(r,v),[r.sido,r.gu,r.dong]);
+  return shell({title:`${r.name} 카드단말기 설치 — ${SITE_NAME}`,
+    desc:`${r.name} 카드단말기 설치 안내. ${r.dong} 매장에 맞는 유선·무선 단말기 고르는 기준, 준비 서류, 가맹 등록, 정산까지 순서대로 정리했습니다.`,
     canonical,ogimg,
-    crumb:`<a href="/">홈</a> › <a href="/region">지역별 설치</a> › <a href="/region/${r.ss}">${esc(r.sido)}</a> › <a href="/region/${r.ss}/${r.gg}">${esc(r.gu)}</a> › ${esc(r.dong)}`,
-    h1:`${esc(r.name)}<br>카드단말기 설치·판매`, heroCap:r.dong,
-    leadText:`${r.dong} 매장에 맞는 카드단말기를 무료로 안내해 드립니다. 빠른 설치, 24시간 상담.`,
-    bodyMain:body, seedStr:r.url, areaServed:r.name,
+    crumb:`<a href="/">홈</a><span>›</span><a href="/region">지역별 설치</a><span>›</span><a href="/region/${r.ss}">${esc(r.sido)}</a><span>›</span><a href="/region/${r.ss}/${r.gg}">${esc(r.gu)}</a><span>›</span>${esc(r.dong)}`,
+    h1:`${esc(r.dong)} 카드단말기 설치 안내`, metaArea:`${r.sido} ${r.gu}`,
+    bodyMain:body, seedStr:r.url, areaServed:r.name, faq:poolFaq(r.url,v,[r.sido,r.gu,r.dong]),
     trail:[{n:"홈",u:"/"},{n:"지역별 설치",u:"/region"},{n:r.sido,u:`/region/${r.ss}`},{n:r.gu,u:`/region/${r.ss}/${r.gg}`},{n:r.dong,u:`/region/${r.url}`}]});
 }
-function nearbyDong(r){
+function nearbyDong(r,v){
   const sib=(dongOf.get(r.ss+"/"+r.gg)||[]).filter(x=>x.url!==r.url).slice(0,24);
   if(!sib.length) return "";
   const links=sib.map(x=>`<a href="/region/${x.url}">${esc(x.dong)}</a>`).join("");
-  return `<div class="child"><h2>${esc(r.gu)} 인근 지역</h2><div class="child-list">${links}</div></div>`;
+  return `<h2>${esc(r.gu)} 다른 지역</h2>${renderNearIntro(r.url,v)}<div class="near">${links}</div>`;
 }
 
 // ---- 구군 랜딩 ----
@@ -882,23 +1993,21 @@ function nearbyGuBlock(ss, gg, sido){
 function renderGugun(ss, gg){
   const list=dongOf.get(ss+"/"+gg); if(!list) return null;
   const sido=bySido.get(ss), gu=list[0].gu;
-  const ro={dong:gu, area:sido, sido, name:`${sido} ${gu}`, url:ss+"/"+gg};
-  const canonical=`${SITE}/region/${ss}/${gg}`;
-  const ogimg=photoUrl(ro.url);
+  const slug=ss+"/"+gg;
+  const canonical=`${SITE}/region/${slug}`;
+  const ogimg=photoUrl(slug);
+  const v=poolVars(sido,gu,gu);
   const links=list.map(x=>`<a href="/region/${x.url}">${esc(x.dong)}</a>`).join("");
-  const body=`<div class="content">${seoContent(ro)}</div>
-${faqBlock(ro)}
-<h2>${esc(gu)} 단말기 종류</h2>${products(gu)}
-<div class="child"><h2>${esc(gu)} 읍·면·동 선택</h2><div class="child-list">${links}</div></div>
-${nearbyGuBlock(ss,gg,sido)}
-${ctaBlock(gu)}`;
-  return shell({title:`${sido} ${gu} 카드단말기 설치·판매 | ${SITE_NAME}`,
-    desc:`${sido} ${gu} 카드단말기 설치/판매 전문 ${SITE_NAME}. ${gu} 내 읍·면·동별 단말기 안내, 빠른 설치, 24시간 상담.`,
+  const body=fixJosa(poolBody(slug,v,gu),[sido,gu])
+    +`<div class="child"><h2>${esc(gu)} 읍·면·동 선택</h2><div class="child-list">${links}</div></div>`
+    +nearbyGuBlock(ss,gg,sido);
+  return shell({title:`${sido} ${gu} 카드단말기 설치 — ${SITE_NAME}`,
+    desc:`${sido} ${gu} 카드단말기 설치 안내. ${gu} 내 읍·면·동별 안내와 단말기 고르는 기준, 준비 서류, 가맹 등록 절차를 정리했습니다.`,
     canonical,ogimg,
-    crumb:`<a href="/">홈</a> › <a href="/region">지역별 설치</a> › <a href="/region/${ss}">${esc(sido)}</a> › ${esc(gu)}`,
-    h1:`${esc(sido)} ${esc(gu)}<br>카드단말기 설치·판매`, heroCap:gu,
-    leadText:`${gu} 매장에 맞는 카드단말기를 무료로 안내해 드립니다. 아래에서 읍·면·동을 선택하세요.`,
-    bodyMain:body, seedStr:ro.url, areaServed:`${sido} ${gu}`,
+    crumb:`<a href="/">홈</a><span>›</span><a href="/region">지역별 설치</a><span>›</span><a href="/region/${ss}">${esc(sido)}</a><span>›</span>${esc(gu)}`,
+    h1:`${esc(gu)} 카드단말기 설치 안내`, metaArea:sido,
+    leadText:`${gu} 매장에 맞는 카드단말기를 안내해 드립니다. 아래에서 읍·면·동을 선택하세요.`,
+    bodyMain:body, seedStr:slug, areaServed:`${sido} ${gu}`, faq:poolFaq(slug,v,[sido,gu]),
     trail:[{n:"홈",u:"/"},{n:"지역별 설치",u:"/region"},{n:sido,u:`/region/${ss}`},{n:gu,u:`/region/${ss}/${gg}`}]});
 }
 
@@ -906,22 +2015,19 @@ ${ctaBlock(gu)}`;
 function renderSido(ss){
   const sido=bySido.get(ss); if(!sido) return null;
   const guns=gugunOf.get(ss)||[];
-  const ro={dong:sido, area:sido, sido, name:sido, url:ss};
   const canonical=`${SITE}/region/${ss}`;
-  const ogimg=photoUrl(ro.url);
+  const ogimg=photoUrl(ss);
+  const v=poolVars(sido,sido,sido);
   const links=guns.map(g=>`<a href="/region/${ss}/${g.gg}">${esc(g.gu)}</a>`).join("");
-  const body=`<div class="content">${seoContent(ro)}</div>
-${faqBlock(ro)}
-<h2>${esc(sido)} 단말기 종류</h2>${products(sido)}
-<div class="child"><h2>${esc(sido)} 시·군·구 선택</h2><div class="child-list">${links}</div></div>
-${ctaBlock(sido)}`;
-  return shell({title:`${sido} 카드단말기 설치·판매 | ${SITE_NAME}`,
-    desc:`${sido} 카드단말기 설치/판매 전문 ${SITE_NAME}. ${sido} 시·군·구별 단말기 안내, 빠른 설치, 24시간 상담.`,
+  const body=fixJosa(poolBody(ss,v,sido),[sido])
+    +`<div class="child"><h2>${esc(sido)} 시·군·구 선택</h2><div class="child-list">${links}</div></div>`;
+  return shell({title:`${sido} 카드단말기 설치 — ${SITE_NAME}`,
+    desc:`${sido} 카드단말기 설치 안내. ${sido} 시·군·구별 안내와 단말기 고르는 기준, 준비 서류, 가맹 등록 절차를 정리했습니다.`,
     canonical,ogimg,
-    crumb:`<a href="/">홈</a> › <a href="/region">지역별 설치</a> › ${esc(sido)}`,
-    h1:`${esc(sido)}<br>카드단말기 설치·판매`, heroCap:sido,
-    leadText:`${sido} 매장에 맞는 카드단말기를 무료로 안내해 드립니다. 아래에서 시·군·구를 선택하세요.`,
-    bodyMain:body, seedStr:ro.url, areaServed:sido,
+    crumb:`<a href="/">홈</a><span>›</span><a href="/region">지역별 설치</a><span>›</span>${esc(sido)}`,
+    h1:`${esc(sido)} 카드단말기 설치 안내`, metaArea:"전국",
+    leadText:`${sido} 매장에 맞는 카드단말기를 안내해 드립니다. 아래에서 시·군·구를 선택하세요.`,
+    bodyMain:body, seedStr:ss, areaServed:sido, faq:poolFaq(ss,v,[sido]),
     trail:[{n:"홈",u:"/"},{n:"지역별 설치",u:"/region"},{n:sido,u:`/region/${ss}`}]});
 }
 
@@ -939,8 +2045,8 @@ function renderList(){
   return shell({title:`전체 목록 — 지역 색인 | ${SITE_NAME}`,
     desc:`${SITE_NAME}의 주요 페이지와 전국 시·도·시·군·구 카드단말기 설치 안내 페이지를 모은 전체 목록.`,
     canonical:`${SITE}/list`, ogimg:photoUrl("list"),
-    crumb:`<a href="/">홈</a> › 전체 목록`,
-    h1:`전체 목록`, heroCap:"색인",
+    crumb:`<a href="/">홈</a><span>›</span>전체 목록`,
+    h1:`전체 목록`, metaArea:"전국",
     leadText:`주요 페이지와 전국 시·도·시·군·구 색인입니다. (전국 ${REGIONS.length.toLocaleString()}개 읍·면·동)`,
     bodyMain:main+blocks+`<script type="application/ld+json">${JSON.stringify({"@context":"https://schema.org","@type":"CollectionPage","name":"전체 목록","url":SITE+"/list","isPartOf":{"@type":"WebSite","name":SITE_NAME,"url":SITE+"/"}})}<\/script>`,
     seedStr:"list", areaServed:"전국",
@@ -952,12 +2058,12 @@ function renderAllRegions(){
     const cols=guns.map(g=>`<a class="ar-gu2" href="/region/${s.ss}/${g.gg}">${esc(g.gu)}</a>`).join("");
     return `<section class="ar-sido"><h2><a href="/region/${s.ss}">${esc(s.sido)}</a> <span>${guns.length}개 시·군·구</span></h2><div class="ar-guns2">${cols}</div></section>`;
   }).join("");
-  const body=`<div class="content"><p>전국 시·도 → 시·군·구별 카드단말기 설치 안내입니다. 시·군·구를 누르면 읍·면·동 목록과 설치 안내를 볼 수 있습니다.</p></div>${blocks}${ctaBlock("우리 지역")}`;
+  const body=`<div class="content"><p>전국 시·도 → 시·군·구별 카드단말기 설치 안내입니다. 시·군·구를 누르면 읍·면·동 목록과 설치 안내를 볼 수 있습니다.</p></div>${blocks}${ctaBox("우리 지역")}`;
   return shell({title:`전국 카드단말기 설치 지역 전체 보기 | ${SITE_NAME}`,
-    desc:`전국 시·도, 시·군·구 카드단말기 설치 안내 전체 지역 목록. 우리 지역을 찾아 빠른 설치 상담을 받아보세요.`,
+    desc:`전국 시·도, 시·군·구 카드단말기 설치 안내 전체 지역 목록. 우리 지역을 찾아 설치 상담을 받아보세요.`,
     canonical:`${SITE}/sitemap-regions`, ogimg:photoUrl("all-regions"),
-    crumb:`<a href="/">홈</a> › <a href="/region">지역별 설치</a> › 전체 지역`,
-    h1:`전국 설치 지역 전체 보기`, heroCap:"전국",
+    crumb:`<a href="/">홈</a><span>›</span><a href="/region">지역별 설치</a><span>›</span>전체 지역`,
+    h1:`전국 설치 지역 전체 보기`, metaArea:"전국",
     leadText:`시·도 → 시·군·구를 선택해 우리 지역 안내를 확인하세요. (전국 ${REGIONS.length.toLocaleString()}개 읍·면·동)`,
     bodyMain:body, seedStr:"all-regions", areaServed:"전국",
     trail:[{n:"홈",u:"/"},{n:"지역별 설치",u:"/region"},{n:"전체 지역",u:"/sitemap-regions"}]});
@@ -966,17 +2072,16 @@ function renderAllRegions(){
 function renderRegionIndex(){
   const ORDER=["seoul","incheon","gyeonggi","gangwon","daejeon","sejong","chungbuk","chungnam","gwangju","jeonbuk","jeonnam","daegu","busan","ulsan","gyeongbuk","gyeongnam","jeju"];
   const links=ORDER.filter(ss=>bySido.has(ss)).map(ss=>`<a class="sido-cell" href="/region/${ss}">${SIDO_SHORT[ss]}</a>`).join("");
-  const body=`<div class="child"><h2>시·도 선택</h2><div class="sido-grid">${links}</div></div>${ctaBlock("우리 지역")}`;
+  const body=`<div class="child"><h2>시·도 선택</h2><div class="sido-grid">${links}</div></div>${ctaBox("우리 지역")}`;
   return shell({title:`지역별 카드단말기 설치 안내 | ${SITE_NAME}`,
-    desc:`전국 시·도 → 시·군·구 → 읍·면·동 단계별 카드단말기 설치/판매 안내. 우리 지역을 선택하세요.`,
+    desc:`전국 시·도 → 시·군·구 → 읍·면·동 단계별 카드단말기 설치 안내. 우리 지역을 선택하세요.`,
     canonical:`${SITE}/region`, ogimg:photoUrl("region-index"),
-    crumb:`<a href="/">홈</a> › 지역별 설치`,
-    h1:`지역별 카드단말기 설치 안내`, heroCap:"전국",
+    crumb:`<a href="/">홈</a><span>›</span>지역별 설치`,
+    h1:`지역별 카드단말기 설치 안내`, metaArea:"전국",
     leadText:`시·도 → 시·군·구 → 읍·면·동 순서로 선택해 우리 지역 안내를 확인하세요. (전국 ${REGIONS.length.toLocaleString()}개 지역)`,
     bodyMain:body, seedStr:"region-index", areaServed:"전국",
     trail:[{n:"홈",u:"/"},{n:"지역별 설치",u:"/region"}]});
 }
-
 // ---- 홈 ----
 function renderHome(){
   const title=`PRIMEpos ${SITE_NAME} — 유선·무선 카드단말기 설치 상담`;
